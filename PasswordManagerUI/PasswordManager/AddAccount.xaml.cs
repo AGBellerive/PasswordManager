@@ -28,6 +28,7 @@ namespace PasswordManager
             {
                 manager = new FileManager();
             }
+            AccountBx.Focus();
         }
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
@@ -40,7 +41,8 @@ namespace PasswordManager
             if (AccountBx.Text.Length > 1 && PasswordBx.Text.Length > 1)
             {
                 manager.addAccount(AccountBx.Text, UsernameBx.Text, EmailBx.Text, PasswordBx.Text, otherInfoBx.Text);
-                returnBtn_Click(null, null);
+
+                Application.Current.MainWindow.Content = new DisplayPassword();
             }
             else
             {

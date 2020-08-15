@@ -30,13 +30,15 @@ namespace PasswordManager
             if (manager == null)
             {
                 manager = new FileManager();
-    }
-}
+            }
+            SearchedAccountName.Focus();
+        }
 
         private void ConfirmBtn_Click(object sender, RoutedEventArgs e)
         {
             manager.updatePassword(NewPassword.Text,foundAccount);
-            Application.Current.MainWindow.Content = new DisplayPassword();
+
+            Application.Current.MainWindow.Content = new DisplayPassword(); ;
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)

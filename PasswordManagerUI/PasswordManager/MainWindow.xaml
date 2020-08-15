@@ -9,5 +9,8 @@
     <Grid Background="#FF64B4DD">
         <PasswordBox x:Name="password" HorizontalAlignment="Left" VerticalAlignment="Top" Height="55" Width="295" KeyDown="OnKeyDownHandler" Margin="247,209,0,0" FontSize="25" Background="{x:Null}" BorderBrush="White" BorderThickness="2" Cursor="Hand" />
         <Label Content="Master Password" HorizontalAlignment="Left" Margin="247,178,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="countLbl" Content="" HorizontalAlignment="Left" Height="60" Margin="729,10,0,0" VerticalAlignment="Top" Width="27" FontSize="36" Foreground="Red" />
+        <Button Content="Hint " HorizontalAlignment="Left" Height="29" Margin="682,431,0,0" VerticalAlignment="Top" Width="102" Click="Hint_Button_Click"/>
+        <Label x:Name="hintLbl"  HorizontalAlignment="Left" Height="30" Margin="247,269,0,0" VerticalAlignment="Top" Width="295"/>
     </Grid>
 </Window>

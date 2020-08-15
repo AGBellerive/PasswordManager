@@ -21,10 +21,12 @@ namespace PasswordManager
     public partial class MainWindow : Window
     {
         private int masterPassword = 1890847487;
-
+        private int count;
+        private int hintCount;
         public MainWindow()
         {
             InitializeComponent();
+            password.Focus();
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
@@ -36,12 +38,33 @@ namespace PasswordManager
                     Application.Current.MainWindow.Content = new DisplayPassword();
                 }
 
-                else
+                else if (count == 3)
                 {
                     MessageBox.Show("Incorrect Password Exiting");
-                    System.Environment.Exit(1);
+                    Environment.Exit(1);
+                }
+                else
+                {
+                    count++;
+                    countLbl.Content = count;
+                    password.Password = "";
                 }
             }
+        }
+
+        private void Hint_Button_Click(object sender, RoutedEventArgs e)
+        {
+            hintCount++;
+            if (hintCount%2 == 0)
+            {
+                hintLbl.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                hintLbl.Visibility = Visibility.Visible;
+                hintLbl.Content = "Most Complex password I have";
+            }
+           
         }
     }
 }

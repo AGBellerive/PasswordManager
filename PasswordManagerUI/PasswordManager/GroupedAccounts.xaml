@@ -16,14 +16,15 @@
                 </LinearGradientBrush>
             </TextBlock.Background>
         </TextBlock>
-        <Label Content="Enter the Email you're trying to group" HorizontalAlignment="Left" Height="27" Margin="10,30,0,0" VerticalAlignment="Top" Width="225" FontFamily="Consolas" FontSize="10"/>
-        <TextBox x:Name="emailSearch" HorizontalAlignment="Left" Height="37" Margin="22,62,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="349" BorderBrush="#FF64B4DD" KeyDown="searchEmail" BorderThickness="2" TextAlignment="Center" FontSize="18" FontWeight="Bold"/>
+        <Label Content="Enter the Email you're trying to group" HorizontalAlignment="Left" Height="27" Margin="10,48,0,0" VerticalAlignment="Top" Width="225" FontFamily="Consolas" FontSize="10"/>
+        <TextBox x:Name="emailSearch" HorizontalAlignment="Left" Height="37" Margin="22,80,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="349" BorderBrush="#FF64B4DD" KeyDown="searchEmail" BorderThickness="2" TextAlignment="Center" FontSize="18" FontWeight="Bold"/>
 
         <ScrollViewer x:Name="AccountListScroller" HorizontalAlignment="Left" Height="352" Margin="22,138,0,0" VerticalAlignment="Top" Width="349" Visibility="Hidden">
             <TextBlock  x:Name="AccountListWithEmail" TextWrapping="Wrap"/>
         </ScrollViewer>
-        <Label Content="Enter the Password you're trying to group" HorizontalAlignment="Left" Height="27" Margin="420,30,0,0" VerticalAlignment="Top" Width="253" FontFamily="Consolas" FontSize="10"/>
-        <PasswordBox x:Name="passwordSearch" HorizontalAlignment="Left" Height="37" Margin="420,62,0,0" VerticalAlignment="Top" Width="349" BorderBrush="#FF64B4DD" KeyDown="searchPassword" BorderThickness="2"  FontSize="18" FontWeight="Bold"/>
+        <Label Content="Enter the Password you're trying to group" HorizontalAlignment="Left" Height="27" Margin="420,48,0,0" VerticalAlignment="Top" Width="253" FontFamily="Consolas" FontSize="10"/>
+        <PasswordBox x:Name="passwordSearch" HorizontalAlignment="Left" Height="37" Margin="420,80,0,0" VerticalAlignment="Top" Width="349" BorderBrush="#FF64B4DD" KeyDown="searchPassword" BorderThickness="2"  FontSize="18" FontWeight="Bold"/>
+
         <ScrollViewer x:Name ="AccountListPasswordScroller" HorizontalAlignment="Left" Height="352" Margin="420,138,0,0" VerticalAlignment="Top" Width="349" Visibility="Hidden">
             <TextBlock  x:Name="AccountListWithPassword" TextWrapping="Wrap"/>
         </ScrollViewer>

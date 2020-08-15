@@ -11,7 +11,8 @@
     {
         class FileManager
         {
-            public List<Account> allAccounts{ get; set; }
+            public List<Account> allAccounts { get; set; } 
+            public List<Account> multiAccountFind { get; set; }
 
             public FileManager()
             {
@@ -28,8 +29,8 @@
             {
                 bool found = false;
                 int count = 0;
-                List<Account> listOfAccounts = new List<Account>();
                 Account foundAccount = new Account();
+                multiAccountFind = new List<Account>();
 
                 foreach (Account account in this.allAccounts)
                 {
@@ -40,22 +41,19 @@
                             foundAccount = account;
                             found = true;
                         }
-                        listOfAccounts.Add(account);
+                        multiAccountFind.Add(account);
                     }
                 }
 
-                if (listOfAccounts.Count > 1)
+                if (multiAccountFind.Count > 1)
                 {
-                    //TODO IMPLEMENT A WAY TO DISPLAY MULTIPLE OPTIONS
-                    MessageBox.Show("Not Yet Implemented");
-                    searchMultipleAccounts(listOfAccounts);
-                    return new Account();
+                    return new Account("MULTI-FIND", "","","","");
                 }
                 if (!found)
                 {
                     if (count == 0)
                     {
-                        MessageBox.Show("No account'" + accountName + "'found");
+                        MessageBox.Show("No account'" + accountName + "'was found");
                         return new Account();
                     }
                 }
@@ -116,34 +114,19 @@
                 return matchedAccounts;
             }
 
-            public void searchMultipleAccounts(List<Account> listOfAccounts)
+            public Account searchMultipleAccounts(String search)
             {
-                Account foundAccount;
-                bool found = false;
 
-                Console.WriteLine("Do you mean one of the entries below");
-                foreach (Account item in listOfAccounts)
+                foreach (Account account in multiAccountFind)
                 {
-                    Console.WriteLine(item.Site);
-                }
-
-                Console.WriteLine("Type one of the account names");
-                String secondSearch = Console.ReadLine();
-
-                foreach (Account account in listOfAccounts)
-                {
-                    if (account.Site.ToLower().Equals(secondSearch.ToLower()))
+                    if (account.Site.ToLower().Equals(search.ToLower()))
                     {
-                        foundAccount = account;
-                        found = true;
+                        return account;
                     }
                 }
-
-                if (!found)
-                {
-                        //MessageBox.Show("No account'" + accountName + "'found");
-                        //return new Account();
-                }
+                MessageBox.Show("No account'" + search + "'was found in the provided list");
+                return new Account();
+                
             }
 
             public bool accountExists(String accountName) 

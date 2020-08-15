@@ -21,23 +21,38 @@ namespace PasswordManager
     public partial class DisplayPassword : Page
     {
         private static FileManager manager;
+        public bool isFileChanged { get; set; }
 
         public DisplayPassword()
         {
             InitializeComponent();
-            if (manager == null)
-            {
-                manager = new FileManager();
-            }
+            if (manager == null) manager = new FileManager();
+            manager.readJson();
+            SearchedAccountName.Focus();
         }
+
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
             {
+                if (SearchedAccountName.Text.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0); 
                 Account foundAccount = manager.searchAccount(SearchedAccountName.Text);
+                
+                if (foundAccount.Site.Equals("MULTI-FIND"))
+                {
+                    MultipleAccountDisplay mad = new MultipleAccountDisplay();
+                    mad.load(SearchedAccountName.Text);
+                    mad.AccountList.Text = "";
 
-                if (foundAccount != null)
+                    foreach (Account acc in manager.multiAccountFind)
+                    {
+                        mad.AccountList.Text += acc.Site +"\n";
+                    }
+                    Application.Current.MainWindow.Content = mad;
+                }
+
+                else if (foundAccount != null)
                 {
                     AccountName.Content = foundAccount.Site;
                     UserName.Content = foundAccount.Username;
@@ -64,6 +79,7 @@ namespace PasswordManager
         {
             AccountListScroller.Visibility = Visibility.Visible;
             AccountList.Visibility = Visibility.Visible;
+            AccountList.Text = "";
 
             foreach (Account item in manager.allAccounts)
             {

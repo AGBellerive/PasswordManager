@@ -29,6 +29,7 @@ namespace PasswordManager
             {
                 manager = new FileManager();
             }
+            AccountListWithEmail.Focus();
         }
 
         private void searchEmail(object sender, KeyEventArgs e)
