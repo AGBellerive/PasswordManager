@@ -23,15 +23,21 @@ namespace PasswordManager
         private static FileManager manager;
         private Account foundAccount;
 
+        /**
+         * This constructor checks if the filemanager object is created, if it isnt
+        * it creates a new object, then it hides multiple ui elements from the user
+        * to then later be shwon
+        */
         public ChangePassword()
         {
             InitializeComponent();
 
-            if (manager == null)
-            {
-                manager = new FileManager();
-            }
+            if (manager == null) manager = new FileManager();
+            
             SearchedAccountName.Focus();
+            UpdateBtn.Visibility = Visibility.Hidden;
+            NewPassword.Visibility = Visibility.Hidden;
+            newPasswordLbl.Visibility = Visibility.Hidden;
         }
 
         private void ConfirmBtn_Click(object sender, RoutedEventArgs e)
@@ -45,7 +51,7 @@ namespace PasswordManager
         {
             if (e.Key == Key.Return)
             {
-                foundAccount = manager.searchAccount(SearchedAccountName.Text);
+                foundAccount = manager.specificSearch(SearchedAccountName.Text);
 
                 if (foundAccount != null)
                 {
@@ -56,7 +62,7 @@ namespace PasswordManager
 
                     NewPassword.Visibility = Visibility.Visible;
                     UpdateBtn.Visibility = Visibility.Visible;
-
+                    newPasswordLbl.Visibility = Visibility.Visible;
                 }
             }
         }

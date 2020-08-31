@@ -21,13 +21,22 @@ namespace PasswordManager
     public partial class AddAccount : Page
     {
         private static FileManager manager;
+        /**
+         * This constructor checks if the filemanager object is created, if it isnt
+         * it creates a new object, then it hides multiple ui elements from the user
+         * to then later be shwon
+         */
         public AddAccount()
         {
             InitializeComponent();
-            if (manager == null)
-            {
-                manager = new FileManager();
-            }
+            if (manager == null) manager = new FileManager();
+            
+            UsernameBx.Visibility = Visibility.Hidden;
+            EmailBx.Visibility = Visibility.Hidden;
+            PasswordBx.Visibility = Visibility.Hidden;
+            otherInfoBx.Visibility = Visibility.Hidden;
+            ConfirmBtn.Visibility = Visibility.Hidden;
+
             AccountBx.Focus();
         }
 
@@ -61,6 +70,9 @@ namespace PasswordManager
                 EmailBx.Visibility = Visibility.Visible;
                 PasswordBx.Visibility = Visibility.Visible; 
                 otherInfoBx.Visibility = Visibility.Visible;
+                ConfirmBtn.Visibility = Visibility.Visible;
+
+                UsernameBx.Focus();
             }
             else
             {
@@ -71,6 +83,14 @@ namespace PasswordManager
                 EmailBx.Visibility = Visibility.Hidden;
                 PasswordBx.Visibility = Visibility.Hidden;
                 otherInfoBx.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void AccountBx_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Return)
+            {
+                Check_If_Exists_Click(sender, e);
             }
         }
     }

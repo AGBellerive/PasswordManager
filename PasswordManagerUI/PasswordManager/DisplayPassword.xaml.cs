@@ -23,12 +23,20 @@ namespace PasswordManager
         private static FileManager manager;
         public bool isFileChanged { get; set; }
 
+        /**
+        * This constructor checks if the filemanager object is created, if it isnt
+        * it creates a new object, then it hides multiple ui elements from the user
+        * to then later be shwon
+        */
         public DisplayPassword()
         {
             InitializeComponent();
             if (manager == null) manager = new FileManager();
             manager.readJson();
             SearchedAccountName.Focus();
+            AccountListScroller.Visibility = Visibility.Hidden;
+            otherLbl.Visibility = Visibility.Hidden;
+            Other.Visibility = Visibility.Hidden;
         }
 
 
@@ -101,6 +109,11 @@ namespace PasswordManager
         private void Grouped_Accounts_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.MainWindow.Content = new GroupedAccounts();
+        }
+
+        private void Delete_Account_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.MainWindow.Content = new DeleteAccount();
         }
     }
 }

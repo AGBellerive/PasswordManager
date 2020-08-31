@@ -28,7 +28,11 @@ namespace PasswordManager
             InitializeComponent();
             password.Focus();
         }
-
+        /**
+         * This method compares the master password, stored in hash,
+         * with the hash result of what the user inputs. If the password 
+         * is wrong, you have 3 total shots untill it closes it self
+         */
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)

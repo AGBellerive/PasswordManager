@@ -22,12 +22,19 @@ namespace PasswordManager
     public partial class MultipleAccountDisplay : Page
     {
         private static FileManager manager;
-
+        /**
+        * This constructor checks if the filemanager object is created, if it isnt
+        * it creates a new object, then it hides multiple ui elements from the user
+        * to then later be shwon
+        */
         public MultipleAccountDisplay()
         {
             InitializeComponent();
             SearchedAccountName.Focus();
             if (manager == null) manager = new FileManager();
+
+            otherLbl.Visibility = Visibility.Hidden;
+            Other.Visibility = Visibility.Hidden;
 
         }
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
