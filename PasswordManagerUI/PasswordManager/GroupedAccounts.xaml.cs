@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -39,6 +40,8 @@ namespace PasswordManager
                 manager = new FileManager();
             }
             AccountListWithEmail.Focus();
+            AccountListScroller.Visibility = Visibility.Hidden;
+            AccountListPasswordScroller.Visibility = Visibility.Hidden;
         }
 
         private void searchEmail(object sender, KeyEventArgs e)

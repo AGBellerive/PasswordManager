@@ -22,6 +22,8 @@ namespace PasswordManager
         public List<Account> allAccounts { get; set; }
         public List<Account> multiAccountFind { get; set; }
 
+        private String path = "C:/Users/Alex/Documents/randocs/abracadabra.json";
+
         public FileManager()
         {
             LOG.Info("Filemanager Created");
@@ -39,7 +41,7 @@ namespace PasswordManager
             string json;
             try
             {
-                json = File.ReadAllText(@"C:/Users/Alex/Documents/randocs/abracadabra.json");
+                json = File.ReadAllText(this.path);
                 this.allAccounts = JsonConvert.DeserializeObject<List<Account>>(json);
                 LOG.Info("JSON file sucessfully read");
             }
@@ -109,7 +111,7 @@ namespace PasswordManager
             int position = this.allAccounts.IndexOf(account);
             allAccounts[position].Password = newPassword;
 
-            File.WriteAllText(@"C:/Users/Alex/Documents/randocs/abracadabra.json", JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
+            File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
             LOG.Info("Password file modified");
             MessageBox.Show("Password Changed. Redirecting home...");
         }
@@ -126,7 +128,7 @@ namespace PasswordManager
 
             this.allAccounts.Add(newAccount);
 
-            File.WriteAllText(@"C:/Users/Alex/Documents/randocs/abracadabra.json", JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
+            File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
             LOG.Info("Password file modified");
             MessageBox.Show("Account added, Redirecting...");
         }
@@ -147,8 +149,11 @@ namespace PasswordManager
                     matchedAccounts.Add(account);
                 }
             }
-            if (!found) MessageBox.Show("No account uses this password");
-            LOG.Info("No password match found");
+            if (!found)
+            {
+                LOG.Info("No password match found");
+                MessageBox.Show("No account uses this password");
+            }
             return matchedAccounts;
         }
         /**
@@ -167,8 +172,11 @@ namespace PasswordManager
                     matchedAccounts.Add(account);
                 }
             }
-            if (!found) MessageBox.Show("No account uses this email");
-            LOG.Info("No email match found");
+            if (!found)
+            {
+                LOG.Info("No email match found");
+                MessageBox.Show("No account uses this email");
+            }
             return matchedAccounts;
         }
         /**
@@ -237,10 +245,9 @@ namespace PasswordManager
             LOG.Info(deletedAcc.Site +" " + deletedAcc.Username +" " + deletedAcc.Password +" " + deletedAcc.Other);
             this.allAccounts.Remove(deletedAcc);
 
-            File.WriteAllText(@"C:/Users/Alex/Documents/randocs/abracadabra.json", JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
+            File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
             LOG.Info("Password file modified");
             MessageBox.Show("Account deleted... Redirecting");
         }
     }
 }
-//https://blog.elmah.io/log4net-tutorial-the-complete-guide-for-beginners-and-pros/
