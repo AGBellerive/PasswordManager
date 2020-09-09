@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using log4net;
 
 namespace PasswordManager
 {
@@ -20,6 +21,8 @@ namespace PasswordManager
     /// </summary>
     public partial class GroupedAccounts : Page
     {
+        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static FileManager manager;
 
         /**
@@ -30,7 +33,7 @@ namespace PasswordManager
         public GroupedAccounts()
         {
             InitializeComponent();
-
+            LOG.Info("Group Account Initilized");
             if (manager == null)
             {
                 manager = new FileManager();

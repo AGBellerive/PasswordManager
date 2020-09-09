@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using log4net;
 
 namespace PasswordManager
 {
@@ -20,6 +21,8 @@ namespace PasswordManager
     /// </summary>
     public partial class DeleteAccount : Page
     {
+        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static FileManager manager;
         private Account accountToBeDeleted;
 
@@ -31,6 +34,7 @@ namespace PasswordManager
         public DeleteAccount()
         {
             InitializeComponent();
+            LOG.Info("Delete account initilized");
             if (manager == null) manager = new FileManager();
             manager.readJson();
 
@@ -41,6 +45,7 @@ namespace PasswordManager
 
         private void DisplayAllAccounts()
         {
+            LOG.Info("Displaying all accounts");
             AccountListScroller.Visibility = Visibility.Visible;
             AccountList.Visibility = Visibility.Visible;
             AccountList.Text = "";

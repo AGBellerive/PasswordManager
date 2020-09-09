@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json;
+using log4net;
 
 namespace PasswordManager
 {
@@ -17,11 +18,13 @@ namespace PasswordManager
      */
     class FileManager
     {
+        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public List<Account> allAccounts { get; set; }
         public List<Account> multiAccountFind { get; set; }
 
         public FileManager()
         {
+            LOG.Info("Filemanager Created");
             readJson();
         }
 
@@ -38,9 +41,11 @@ namespace PasswordManager
             {
                 json = File.ReadAllText(@"C:/Users/Alex/Documents/randocs/abracadabra.json");
                 this.allAccounts = JsonConvert.DeserializeObject<List<Account>>(json);
+                LOG.Info("JSON file sucessfully read");
             }
             catch (FileNotFoundException)
             {
+                LOG.Error("JSON file wasnt found, application exiting");
                 MessageBox.Show("Password File Not Found. Exiting...");
                 Environment.Exit(1);
             }
@@ -55,6 +60,7 @@ namespace PasswordManager
          */
         public Account searchAccount(String accountName)
         {
+            LOG.Info("Account being searched for is || " +accountName + " ||");
             bool found = false;
             int count = 0;
             Account foundAccount = new Account();
@@ -75,16 +81,19 @@ namespace PasswordManager
 
             if (multiAccountFind.Count > 1)
             {
+                LOG.Info("Multiple account found");
                 return new Account("MULTI-FIND", "", "", "", "");
             }
             if (!found)
             {
                 if (count == 0)
                 {
+                    LOG.Info("No Account Found with the name || " +accountName + " ||");
                     MessageBox.Show("No account'" + accountName + "'was found");
                     return new Account();
                 }
             }
+            LOG.Info("Account found was "+ foundAccount.Site);
             return foundAccount;
         }
         
@@ -95,11 +104,13 @@ namespace PasswordManager
 
         public void updatePassword(String newPassword, Account account)
         {
+            LOG.Info("Password being modified is for the account || " +account.Site +" ||");
 
             int position = this.allAccounts.IndexOf(account);
             allAccounts[position].Password = newPassword;
 
             File.WriteAllText(@"C:/Users/Alex/Documents/randocs/abracadabra.json", JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
+            LOG.Info("Password file modified");
             MessageBox.Show("Password Changed. Redirecting home...");
         }
 
@@ -110,11 +121,13 @@ namespace PasswordManager
          */
         public void addAccount(string accountName, string userName, string email, string password, string other)
         {
+            LOG.Info("New Accouint being added by the name || " + accountName + " ||");
             Account newAccount = new Account(accountName, userName, email, password, other);
 
             this.allAccounts.Add(newAccount);
 
             File.WriteAllText(@"C:/Users/Alex/Documents/randocs/abracadabra.json", JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
+            LOG.Info("Password file modified");
             MessageBox.Show("Account added, Redirecting...");
         }
         /**
@@ -135,7 +148,7 @@ namespace PasswordManager
                 }
             }
             if (!found) MessageBox.Show("No account uses this password");
-
+            LOG.Info("No password match found");
             return matchedAccounts;
         }
         /**
@@ -155,7 +168,7 @@ namespace PasswordManager
                 }
             }
             if (!found) MessageBox.Show("No account uses this email");
-
+            LOG.Info("No email match found");
             return matchedAccounts;
         }
         /**
@@ -165,14 +178,16 @@ namespace PasswordManager
 
         public Account searchMultipleAccounts(String search)
         {
-
+            LOG.Info("Account being searched is || "+search + "||" );
             foreach (Account account in multiAccountFind)
             {
                 if (account.Site.ToLower().Equals(search.ToLower()))
                 {
+                    LOG.Info("Account found");
                     return account;
                 }
             }
+            LOG.Info("Account not found");
             MessageBox.Show("No account'" + search + "'was found in the provided list");
             return new Account();
 
@@ -198,25 +213,32 @@ namespace PasswordManager
          */
         public Account specificSearch(String accountName)
         {
+            LOG.Info("Account specifically being searched is || " + accountName + "||");
             foreach (Account account in this.allAccounts)
             {
                 if (account.Site.Equals(accountName,StringComparison.OrdinalIgnoreCase))
                 {
+                    LOG.Info("Specific account found");
                     return account;
                 }
             }
             MessageBox.Show("No Account Fount");
+            LOG.Info("No Specific account found with the name "+accountName);
+            
             return new Account("No Account Found","Please Be More Specific","","", "View the list in the bottom left \n to view all accounts ");
         }
 
-        /**
+        /** 
          * This method deletes the account from the list and rewrites the json file
          */
         public void deleteAccount(Account deletedAcc)
         {
+            LOG.Info("Account with the name || "+deletedAcc.Site + "|| will be deleted");
+            LOG.Info(deletedAcc.Site +" " + deletedAcc.Username +" " + deletedAcc.Password +" " + deletedAcc.Other);
             this.allAccounts.Remove(deletedAcc);
 
             File.WriteAllText(@"C:/Users/Alex/Documents/randocs/abracadabra.json", JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
+            LOG.Info("Password file modified");
             MessageBox.Show("Account deleted... Redirecting");
         }
     }

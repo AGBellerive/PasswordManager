@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using log4net;
 
 namespace PasswordManager
 {
@@ -22,6 +23,9 @@ namespace PasswordManager
     public partial class MultipleAccountDisplay : Page
     {
         private static FileManager manager;
+        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+
         /**
         * This constructor checks if the filemanager object is created, if it isnt
         * it creates a new object, then it hides multiple ui elements from the user
@@ -30,6 +34,7 @@ namespace PasswordManager
         public MultipleAccountDisplay()
         {
             InitializeComponent();
+            LOG.Info("Multiple account initilized");
             SearchedAccountName.Focus();
             if (manager == null) manager = new FileManager();
 

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using log4net;
 
 namespace PasswordManager
 {
@@ -20,6 +21,8 @@ namespace PasswordManager
     /// </summary>
     public partial class AddAccount : Page
     {
+        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static FileManager manager;
         /**
          * This constructor checks if the filemanager object is created, if it isnt
@@ -29,6 +32,8 @@ namespace PasswordManager
         public AddAccount()
         {
             InitializeComponent();
+            LOG.Info("Add account initilized");
+
             if (manager == null) manager = new FileManager();
             
             UsernameBx.Visibility = Visibility.Hidden;
@@ -42,6 +47,7 @@ namespace PasswordManager
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
+            LOG.Info("Redirecting to Display Password");
             Application.Current.MainWindow.Content = new DisplayPassword();
         }
 
@@ -49,6 +55,8 @@ namespace PasswordManager
         {
             if (AccountBx.Text.Length > 1 && PasswordBx.Text.Length > 1)
             {
+                LOG.Info("New Account being added, info : " + AccountBx.Text + " " + UsernameBx.Text + " "+ EmailBx.Text);
+
                 manager.addAccount(AccountBx.Text, UsernameBx.Text, EmailBx.Text, PasswordBx.Text, otherInfoBx.Text);
 
                 Application.Current.MainWindow.Content = new DisplayPassword();
@@ -64,6 +72,7 @@ namespace PasswordManager
         {
             if (!manager.accountExists(AccountBx.Text) && AccountBx.Text.Length > 0)
             {
+
                 AccountBx.BorderBrush = Brushes.Green;
 
                 UsernameBx.Visibility = Visibility.Visible;

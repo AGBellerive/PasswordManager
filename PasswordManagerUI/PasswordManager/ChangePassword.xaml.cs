@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using log4net;
 
 namespace PasswordManager
 {
@@ -20,6 +21,7 @@ namespace PasswordManager
     /// </summary>
     public partial class ChangePassword : Page
     {
+        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static FileManager manager;
         private Account foundAccount;
 
@@ -32,6 +34,7 @@ namespace PasswordManager
         {
             InitializeComponent();
 
+            LOG.Info("Change password initilized");
             if (manager == null) manager = new FileManager();
             
             SearchedAccountName.Focus();
@@ -42,6 +45,7 @@ namespace PasswordManager
 
         private void ConfirmBtn_Click(object sender, RoutedEventArgs e)
         {
+            LOG.Info("Password Being updated");
             manager.updatePassword(NewPassword.Text,foundAccount);
 
             Application.Current.MainWindow.Content = new DisplayPassword(); ;
@@ -69,6 +73,7 @@ namespace PasswordManager
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
+            LOG.Info("returning to display passworde");
             Application.Current.MainWindow.Content = new DisplayPassword();
         }
     }

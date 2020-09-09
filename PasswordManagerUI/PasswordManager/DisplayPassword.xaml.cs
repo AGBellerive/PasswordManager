@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using log4net;
 
 namespace PasswordManager
 {
@@ -20,6 +21,8 @@ namespace PasswordManager
     /// </summary>
     public partial class DisplayPassword : Page
     {
+        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static FileManager manager;
         public bool isFileChanged { get; set; }
 
@@ -31,6 +34,7 @@ namespace PasswordManager
         public DisplayPassword()
         {
             InitializeComponent();
+            LOG.Info("Display password initilized");
             if (manager == null) manager = new FileManager();
             manager.readJson();
             SearchedAccountName.Focus();
@@ -50,6 +54,7 @@ namespace PasswordManager
                 if (foundAccount.Site.Equals("MULTI-FIND"))
                 {
                     MultipleAccountDisplay mad = new MultipleAccountDisplay();
+                    LOG.Info("Changing to Multiple Account Display");
                     mad.load(SearchedAccountName.Text);
                     mad.AccountList.Text = "";
 
@@ -85,6 +90,7 @@ namespace PasswordManager
 
         private void DisplayAllAccounts(object sender, RoutedEventArgs e)
         {
+            LOG.Info("All accounts displaying");
             AccountListScroller.Visibility = Visibility.Visible;
             AccountList.Visibility = Visibility.Visible;
             AccountList.Text = "";
@@ -98,21 +104,25 @@ namespace PasswordManager
 
         private void Add_Account_Click(object sender, RoutedEventArgs e)
         {
+            LOG.Info("Add Account Clicked");
             Application.Current.MainWindow.Content = new AddAccount();
         }
 
         private void Change_Password_Click(object sender, RoutedEventArgs e)
         {
+            LOG.Info("Change Password Clicked");
             Application.Current.MainWindow.Content = new ChangePassword();
         }
 
         private void Grouped_Accounts_Click(object sender, RoutedEventArgs e)
         {
+            LOG.Info("Grouped Accounts Clicked");
             Application.Current.MainWindow.Content = new GroupedAccounts();
         }
 
         private void Delete_Account_Click(object sender, RoutedEventArgs e)
         {
+            LOG.Info("Delete Account Clicked");
             Application.Current.MainWindow.Content = new DeleteAccount();
         }
     }

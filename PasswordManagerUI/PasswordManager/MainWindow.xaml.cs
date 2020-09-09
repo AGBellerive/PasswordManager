@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using log4net;
 
 namespace PasswordManager
 {
@@ -23,6 +24,8 @@ namespace PasswordManager
         private int masterPassword = 1890847487;
         private int count;
         private int hintCount;
+        private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public MainWindow()
         {
             InitializeComponent();
@@ -39,12 +42,14 @@ namespace PasswordManager
             {
                 if (password.Password.GetHashCode() == masterPassword)
                 {
+                    LOG.Info("Password correct");
                     Application.Current.MainWindow.Content = new DisplayPassword();
                 }
 
                 else if (count == 3)
                 {
                     MessageBox.Show("Incorrect Password Exiting");
+                    LOG.Info("Password incorrect");
                     Environment.Exit(1);
                 }
                 else
@@ -52,6 +57,7 @@ namespace PasswordManager
                     count++;
                     countLbl.Content = count;
                     password.Password = "";
+                    LOG.Info("Password incorrect");
                 }
             }
         }
@@ -68,7 +74,6 @@ namespace PasswordManager
                 hintLbl.Visibility = Visibility.Visible;
                 hintLbl.Content = "Most Complex password I have";
             }
-           
         }
     }
 }
