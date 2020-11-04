@@ -81,7 +81,7 @@ namespace PasswordManager
                 }
             }
 
-            if (multiAccountFind.Count > 1)
+            if (multiAccountFind.Count >= 1)
             {
                 LOG.Info("Multiple account found");
                 return new Account("MULTI-FIND", "", "", "", "");
@@ -230,7 +230,7 @@ namespace PasswordManager
                     return account;
                 }
             }
-            MessageBox.Show("No Account Fount");
+            MessageBox.Show("No Account Found");
             LOG.Info("No Specific account found with the name "+accountName);
             
             return new Account("No Account Found","Please Be More Specific","","", "View the list in the bottom left \n to view all accounts ");

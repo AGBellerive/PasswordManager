@@ -73,7 +73,7 @@ namespace PasswordManager
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
-            LOG.Info("returning to display passworde");
+            LOG.Info("Returning to display password");
             Application.Current.MainWindow.Content = new DisplayPassword();
         }
     }
