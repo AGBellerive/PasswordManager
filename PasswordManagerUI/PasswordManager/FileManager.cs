@@ -78,13 +78,19 @@ namespace PasswordManager
                         found = true;
                     }
                     multiAccountFind.Add(account);
+                    foundAccount = account;
                 }
             }
 
-            if (multiAccountFind.Count >= 1)
+            if (multiAccountFind.Count > 1)
             {
                 LOG.Info("Multiple account found");
                 return new Account("MULTI-FIND", "", "", "", "");
+            }
+            else if(multiAccountFind.Count == 1)
+            {
+                LOG.Info("Account found was " + foundAccount.Site);
+                return foundAccount;
             }
             if (!found)
             {
@@ -95,8 +101,8 @@ namespace PasswordManager
                     return new Account();
                 }
             }
-            LOG.Info("Account found was "+ foundAccount.Site);
-            return foundAccount;
+            LOG.Error("Some how made it to the end of this part of the method");
+            return new Account();
         }
         
         /**
