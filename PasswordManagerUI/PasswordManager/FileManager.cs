@@ -22,7 +22,7 @@ namespace PasswordManager
         public List<Account> allAccounts { get; set; }
         public List<Account> multiAccountFind { get; set; }
 
-        private String path = "C:/Users/Alex/Documents/randocs/abracadabra.json";
+        private String path = "C:/Users/kokaw/Documents/temp/opensesemestreet.json";
 
         public FileManager()
         {
@@ -62,7 +62,7 @@ namespace PasswordManager
          */
         public Account searchAccount(String accountName)
         {
-            LOG.Info("Account being searched for is || " +accountName + " ||");
+            LOG.Info("Account being searched for is || " + accountName + " ||");
             bool found = false;
             int count = 0;
             Account foundAccount = new Account();
@@ -87,7 +87,7 @@ namespace PasswordManager
                 LOG.Info("Multiple account found");
                 return new Account("MULTI-FIND", "", "", "", "");
             }
-            else if(multiAccountFind.Count == 1)
+            else if (multiAccountFind.Count == 1)
             {
                 LOG.Info("Account found was " + foundAccount.Site);
                 return foundAccount;
@@ -96,7 +96,7 @@ namespace PasswordManager
             {
                 if (count == 0)
                 {
-                    LOG.Info("No Account Found with the name || " +accountName + " ||");
+                    LOG.Info("No Account Found with the name || " + accountName + " ||");
                     MessageBox.Show("No account'" + accountName + "'was found");
                     return new Account();
                 }
@@ -104,7 +104,7 @@ namespace PasswordManager
             LOG.Error("Some how made it to the end of this part of the method");
             return new Account();
         }
-        
+
         /**
          * This method takes the new password you want to modify and the account
          * and rewrites the orginal file where all the paswords are stored
@@ -112,7 +112,7 @@ namespace PasswordManager
 
         public void updatePassword(String newPassword, Account account)
         {
-            LOG.Info("Password being modified is for the account || " +account.Site +" ||");
+            LOG.Info("Password being modified is for the account || " + account.Site + " ||");
 
             int position = this.allAccounts.IndexOf(account);
             allAccounts[position].Password = newPassword;
@@ -192,7 +192,7 @@ namespace PasswordManager
 
         public Account searchMultipleAccounts(String search)
         {
-            LOG.Info("Account being searched is || "+search + "||" );
+            LOG.Info("Account being searched is || " + search + "||");
             foreach (Account account in multiAccountFind)
             {
                 if (account.Site.ToLower().Equals(search.ToLower()))
@@ -230,16 +230,16 @@ namespace PasswordManager
             LOG.Info("Account specifically being searched is || " + accountName + "||");
             foreach (Account account in this.allAccounts)
             {
-                if (account.Site.Equals(accountName,StringComparison.OrdinalIgnoreCase))
+                if (account.Site.Equals(accountName, StringComparison.OrdinalIgnoreCase))
                 {
                     LOG.Info("Specific account found");
                     return account;
                 }
             }
             MessageBox.Show("No Account Found");
-            LOG.Info("No Specific account found with the name "+accountName);
-            
-            return new Account("No Account Found","Please Be More Specific","","", "View the list in the bottom left \n to view all accounts ");
+            LOG.Info("No Specific account found with the name " + accountName);
+
+            return new Account("No Account Found", "Please Be More Specific", "", "", "View the list in the bottom left \n to view all accounts ");
         }
 
         /** 
@@ -247,8 +247,8 @@ namespace PasswordManager
          */
         public void deleteAccount(Account deletedAcc)
         {
-            LOG.Info("Account with the name || "+deletedAcc.Site + "|| will be deleted");
-            LOG.Info(deletedAcc.Site +" " + deletedAcc.Username +" " + deletedAcc.Password +" " + deletedAcc.Other);
+            LOG.Info("Account with the name || " + deletedAcc.Site + "|| will be deleted");
+            LOG.Info(deletedAcc.Site + " " + deletedAcc.Username + " " + deletedAcc.Password + " " + deletedAcc.Other);
             this.allAccounts.Remove(deletedAcc);
 
             File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
