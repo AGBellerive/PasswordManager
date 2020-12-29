@@ -192,3 +192,4 @@ bin
 obj
 
 PasswordManager/FileManager.cs
+PasswordManager/MainWindow.xaml.cs
