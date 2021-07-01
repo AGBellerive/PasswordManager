@@ -22,7 +22,7 @@ namespace PasswordManager
         public List<Account> allAccounts { get; set; }
         public List<Account> multiAccountFind { get; set; }
 
-        private String path = "C:/Users/kokaw/Documents/temp/opensesemestreet.json";
+        private String path = "C:/Users/kokaw/Documents/randocs/abracadabra.json";
 
         public FileManager()
         {

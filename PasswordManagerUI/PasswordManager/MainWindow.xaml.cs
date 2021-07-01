@@ -21,7 +21,7 @@ namespace PasswordManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int masterPassword = 1720052494;
+        private int masterPassword = 1890847487;
         private int count;
         private int hintCount;
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -40,6 +40,7 @@ namespace PasswordManager
         {
             if (e.Key == Key.Return)
             {
+                //MessageBox.Show(password.Password.GetHashCode().ToString());
                 if (password.Password.GetHashCode() == masterPassword)
                 {
                     LOG.Info("Password correct");
