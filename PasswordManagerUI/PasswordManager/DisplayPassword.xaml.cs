@@ -24,6 +24,8 @@ namespace PasswordManager
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static FileManager manager;
+
+        private readonly Navigation nav;
         public bool isFileChanged { get; set; }
 
         /**
@@ -36,6 +38,7 @@ namespace PasswordManager
             InitializeComponent();
             LOG.Info("Display password initilized");
             if (manager == null) manager = new FileManager();
+            if (nav == null) nav = new Navigation();
             manager.readJson();
             SearchedAccountName.Focus();
             AccountListScroller.Visibility = Visibility.Hidden;
@@ -55,6 +58,7 @@ namespace PasswordManager
                 {
                     MultipleAccountDisplay mad = new MultipleAccountDisplay();
                     LOG.Info("Changing to Multiple Account Display");
+                    //nav.GoToMultipleAccount(SearchedAccountName.Text);
                     mad.load(SearchedAccountName.Text);
                     mad.AccountList.Text = "";
 
@@ -105,25 +109,29 @@ namespace PasswordManager
         private void Add_Account_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Add Account Clicked");
-            Application.Current.MainWindow.Content = new AddAccount();
+            //Application.Current.MainWindow.Content = new AddAccount();
+            nav.GoToAddAccount();
         }
 
         private void Change_Password_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Change Password Clicked");
-            Application.Current.MainWindow.Content = new ChangePassword();
+            //Application.Current.MainWindow.Content = new ChangePassword();
+            nav.GoToChangePassword();
         }
 
         private void Grouped_Accounts_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Grouped Accounts Clicked");
-            Application.Current.MainWindow.Content = new GroupedAccounts();
+            //Application.Current.MainWindow.Content = new GroupedAccounts();
+            nav.GoToGroupedAccounts();
         }
 
         private void Delete_Account_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Delete Account Clicked");
-            Application.Current.MainWindow.Content = new DeleteAccount();
+            //Application.Current.MainWindow.Content = new DeleteAccount();
+            nav.GoToDeleteAccount();
         }
     }
 }

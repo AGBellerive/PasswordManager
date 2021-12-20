@@ -24,6 +24,7 @@ namespace PasswordManager
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private static FileManager manager;
+        private readonly Navigation nav;
         /**
          * This constructor checks if the filemanager object is created, if it isnt
          * it creates a new object, then it hides multiple ui elements from the user
@@ -35,7 +36,8 @@ namespace PasswordManager
             LOG.Info("Add account initilized");
 
             if (manager == null) manager = new FileManager();
-            
+            if (nav == null) nav = new Navigation();
+
             UsernameBx.Visibility = Visibility.Hidden;
             EmailBx.Visibility = Visibility.Hidden;
             PasswordBx.Visibility = Visibility.Hidden;
@@ -48,7 +50,8 @@ namespace PasswordManager
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Redirecting to Display Password");
-            Application.Current.MainWindow.Content = new DisplayPassword();
+            //Application.Current.MainWindow.Content = new DisplayPassword();
+            nav.GoToDisplayPassword();
         }
 
         private void ConfirmBtn_Click(object sender, RoutedEventArgs e)
@@ -59,7 +62,8 @@ namespace PasswordManager
 
                 manager.addAccount(AccountBx.Text, UsernameBx.Text, EmailBx.Text, PasswordBx.Text, otherInfoBx.Text);
 
-                Application.Current.MainWindow.Content = new DisplayPassword();
+                //Application.Current.MainWindow.Content = new DisplayPassword();
+                nav.GoToDisplayPassword();
             }
             else
             {

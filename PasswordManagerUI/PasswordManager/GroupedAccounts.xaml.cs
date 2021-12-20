@@ -26,6 +26,8 @@ namespace PasswordManager
 
         private static FileManager manager;
 
+        private readonly Navigation nav;
+
         /**
         * This constructor checks if the filemanager object is created, if it isnt
         * it creates a new object, then it hides multiple ui elements from the user
@@ -39,6 +41,7 @@ namespace PasswordManager
             {
                 manager = new FileManager();
             }
+            if (nav == null) nav = new Navigation();
             AccountListWithEmail.Focus();
             AccountListScroller.Visibility = Visibility.Hidden;
             AccountListPasswordScroller.Visibility = Visibility.Hidden;
@@ -81,7 +84,8 @@ namespace PasswordManager
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.MainWindow.Content = new DisplayPassword();
+            //Application.Current.MainWindow.Content = new DisplayPassword();
+            nav.GoToDisplayPassword();
         }
     }
 }

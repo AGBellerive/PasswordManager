@@ -24,6 +24,7 @@ namespace PasswordManager
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static FileManager manager;
         private Account foundAccount;
+        private readonly Navigation nav;
 
         /**
          * This constructor checks if the filemanager object is created, if it isnt
@@ -36,7 +37,8 @@ namespace PasswordManager
 
             LOG.Info("Change password initilized");
             if (manager == null) manager = new FileManager();
-            
+            if (nav == null) nav = new Navigation();
+
             SearchedAccountName.Focus();
             UpdateBtn.Visibility = Visibility.Hidden;
             NewPassword.Visibility = Visibility.Hidden;
@@ -47,8 +49,8 @@ namespace PasswordManager
         {
             LOG.Info("Password Being updated");
             manager.updatePassword(NewPassword.Text,foundAccount);
-
-            Application.Current.MainWindow.Content = new DisplayPassword(); ;
+            //Application.Current.MainWindow.Content = new DisplayPassword();
+            nav.GoToDisplayPassword();
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
@@ -74,7 +76,8 @@ namespace PasswordManager
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Returning to display password");
-            Application.Current.MainWindow.Content = new DisplayPassword();
+            //Application.Current.MainWindow.Content = new DisplayPassword();
+            nav.GoToDisplayPassword();
         }
     }
 }

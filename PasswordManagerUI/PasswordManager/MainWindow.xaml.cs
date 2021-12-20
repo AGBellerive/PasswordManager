@@ -25,11 +25,12 @@ namespace PasswordManager
         private int count;
         private int hintCount;
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
+        private readonly Navigation nav;
         public MainWindow()
         {
             InitializeComponent();
             password.Focus();
+            if (nav == null) nav = new Navigation();
         }
         /**
          * This method compares the master password, stored in hash,
@@ -44,7 +45,8 @@ namespace PasswordManager
                 if (password.Password.GetHashCode() == masterPassword)
                 {
                     LOG.Info("Password correct");
-                    Application.Current.MainWindow.Content = new DisplayPassword();
+                    // Application.Current.MainWindow.Content = new DisplayPassword();
+                    nav.GoToDisplayPassword();
                 }
 
                 else if (count == 3)

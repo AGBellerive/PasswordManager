@@ -22,7 +22,7 @@ namespace PasswordManager
         public List<Account> allAccounts { get; set; }
         public List<Account> multiAccountFind { get; set; }
 
-        private String path = "C:/Users/kokaw/Documents/randocs/abracadabra.json";
+        private string path = "C:/Users/kokaw/Documents/randocs/abracadabra.json";
 
         public FileManager()
         {
@@ -47,6 +47,7 @@ namespace PasswordManager
             }
             catch (FileNotFoundException)
             {
+
                 LOG.Error("JSON file wasnt found, application exiting");
                 MessageBox.Show("Password File Not Found. Exiting...");
                 Environment.Exit(1);

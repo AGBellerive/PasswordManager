@@ -25,6 +25,7 @@ namespace PasswordManager
 
         private static FileManager manager;
         private Account accountToBeDeleted;
+        private readonly Navigation nav;
 
         /**
         * This constructor checks if the filemanager object is created, if it isnt
@@ -36,6 +37,7 @@ namespace PasswordManager
             InitializeComponent();
             LOG.Info("Delete account initilized");
             if (manager == null) manager = new FileManager();
+            if (nav == null) nav = new Navigation();
             manager.readJson();
 
             SearchedAccountName.Focus();
@@ -58,7 +60,8 @@ namespace PasswordManager
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.MainWindow.Content = new DisplayPassword();
+            //Application.Current.MainWindow.Content = new DisplayPassword();
+            nav.GoToDisplayPassword();
         }
 
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
