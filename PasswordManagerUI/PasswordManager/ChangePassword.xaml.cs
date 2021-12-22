@@ -38,18 +38,19 @@ namespace PasswordManager
             LOG.Info("Change password initilized");
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
+            manager.readJson();
 
             SearchedAccountName.Focus();
             UpdateBtn.Visibility = Visibility.Hidden;
             NewPassword.Visibility = Visibility.Hidden;
             newPasswordLbl.Visibility = Visibility.Hidden;
+            DisplayAllAccounts();
         }
 
         private void ConfirmBtn_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Password Being updated");
             manager.updatePassword(NewPassword.Text,foundAccount);
-            //Application.Current.MainWindow.Content = new DisplayPassword();
             nav.GoToDisplayPassword();
         }
 
@@ -78,6 +79,19 @@ namespace PasswordManager
             LOG.Info("Returning to display password");
             //Application.Current.MainWindow.Content = new DisplayPassword();
             nav.GoToDisplayPassword();
+        }
+
+        private void DisplayAllAccounts()
+        {
+            LOG.Info("Displaying all accounts");
+            AccountListScroller.Visibility = Visibility.Visible;
+            AccountList.Visibility = Visibility.Visible;
+            AccountList.Text = "";
+
+            foreach (Account item in manager.allAccounts)
+            {
+                AccountList.Text += item.Site + "\n";
+            }
         }
     }
 }

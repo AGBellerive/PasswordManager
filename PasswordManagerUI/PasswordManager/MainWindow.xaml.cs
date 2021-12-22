@@ -1,17 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using log4net;
 
 namespace PasswordManager
@@ -21,17 +10,25 @@ namespace PasswordManager
     /// </summary>
     public partial class MainWindow : Window
     {
-        private int masterPassword = 1890847487;
+        private int masterPassword;
         private int count;
         private int hintCount;
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private readonly Navigation nav;
+        private FileSetup settings; 
+        
+
         public MainWindow()
         {
             InitializeComponent();
             password.Focus();
-            if (nav == null) nav = new Navigation();
+            FileManager manager = new FileManager();
+            settings = manager.checkForJson();
+            masterPassword = settings.HashedPassword;
+
+            LOG.Info("Mainwindow initilized, set up file found "+settings.ToString());
         }
+
+
         /**
          * This method compares the master password, stored in hash,
          * with the hash result of what the user inputs. If the password 
@@ -41,11 +38,11 @@ namespace PasswordManager
         {
             if (e.Key == Key.Return)
             {
-                //MessageBox.Show(password.Password.GetHashCode().ToString());
                 if (password.Password.GetHashCode() == masterPassword)
                 {
                     LOG.Info("Password correct");
-                    // Application.Current.MainWindow.Content = new DisplayPassword();
+
+                    Navigation nav = new Navigation();
                     nav.GoToDisplayPassword();
                 }
 
@@ -75,7 +72,7 @@ namespace PasswordManager
             else
             {
                 hintLbl.Visibility = Visibility.Visible;
-                hintLbl.Content = "Most Complex password I have";
+                hintLbl.Content = settings.Hint;
             }
         }
     }

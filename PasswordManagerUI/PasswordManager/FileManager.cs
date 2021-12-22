@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json;
 using log4net;
@@ -19,22 +16,22 @@ namespace PasswordManager
     class FileManager
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public List<Account> allAccounts { get; set; }
-        public List<Account> multiAccountFind { get; set; }
-
-        private string path = "C:/Users/kokaw/Documents/randocs/abracadabra.json";
+        public List<Account> allAccounts { get; set;} = new List<Account>();
+        public List<Account> multiAccountFind { get; set; } = new List<Account>();
+        private string path;
+        private readonly Navigation nav = new Navigation();
 
         public FileManager()
         {
             LOG.Info("Filemanager Created");
-            readJson();
+            //nav = new Navigation();
+            checkForJson();
         }
 
         /**
          * This method reads the json file that contains all the passwords 
          * stored by the user and it converts it into a list to be easily
-         * manipulated, and in the case specific file isnt found, the application
-         * exits
+         * manipulated
          */
         public void readJson()
         {
@@ -43,16 +40,43 @@ namespace PasswordManager
             {
                 json = File.ReadAllText(this.path);
                 this.allAccounts = JsonConvert.DeserializeObject<List<Account>>(json);
+                if(this.allAccounts == null)
+                {
+                    this.allAccounts = new List<Account>(1);
+                    LOG.Info("JSON file empty");
+                }
                 LOG.Info("JSON file sucessfully read");
             }
             catch (FileNotFoundException)
             {
-
                 LOG.Error("JSON file wasnt found, application exiting");
-                MessageBox.Show("Password File Not Found. Exiting...");
+                MessageBox.Show("An unexpected error occured. Exiting...");
                 Environment.Exit(1);
             }
         }
+
+        /**
+        * This method will check for the existance for the settings file that 
+        * contains all information needed to proceed with this appication.
+        * it checks if the file exits in the bin/debug
+        */
+        public FileSetup checkForJson()
+        {
+            FileSetup settings = new FileSetup(); 
+            if (File.Exists("setup.json"))
+            {
+                LOG.Info("File found");
+                string setupText = File.ReadAllText("setup.json");
+                settings = JsonConvert.DeserializeObject<FileSetup>(setupText);
+                this.path = settings.Path;
+            }
+            else
+            {
+                nav.GoToFileConfiguration();
+            }
+            return settings;
+        }
+
 
         /**
          * This method takes input an account name, then it searches
@@ -63,11 +87,14 @@ namespace PasswordManager
          */
         public Account searchAccount(String accountName)
         {
+            readJson();
             LOG.Info("Account being searched for is || " + accountName + " ||");
+
             bool found = false;
             int count = 0;
             Account foundAccount = new Account();
             multiAccountFind = new List<Account>();
+            
 
             foreach (Account account in this.allAccounts)
             {
@@ -113,6 +140,8 @@ namespace PasswordManager
 
         public void updatePassword(String newPassword, Account account)
         {
+            readJson();
+
             LOG.Info("Password being modified is for the account || " + account.Site + " ||");
 
             int position = this.allAccounts.IndexOf(account);
@@ -130,6 +159,8 @@ namespace PasswordManager
          */
         public void addAccount(string accountName, string userName, string email, string password, string other)
         {
+            readJson();
+
             LOG.Info("New Accouint being added by the name || " + accountName + " ||");
             Account newAccount = new Account(accountName, userName, email, password, other);
 
@@ -145,6 +176,8 @@ namespace PasswordManager
          */
         public List<Account> groupPassword(String password)
         {
+            readJson();
+
             bool found = false;
             List<Account> matchedAccounts = new List<Account>();
 
@@ -169,8 +202,11 @@ namespace PasswordManager
         */
         public List<Account> groupEmail(String email)
         {
+            readJson();
+
             bool found = false;
             List<Account> matchedAccounts = new List<Account>();
+            
             foreach (Account account in this.allAccounts)
             {
                 if (account.Email.ToLower().Contains(email.ToLower()))
@@ -193,6 +229,8 @@ namespace PasswordManager
 
         public Account searchMultipleAccounts(String search)
         {
+            readJson();
+
             LOG.Info("Account being searched is || " + search + "||");
             foreach (Account account in multiAccountFind)
             {
@@ -212,6 +250,8 @@ namespace PasswordManager
          */
         public bool accountExists(String accountName)
         {
+            readJson();
+
             foreach (Account account in this.allAccounts)
             {
                 if (account.Site.Equals(accountName, StringComparison.OrdinalIgnoreCase))
@@ -228,7 +268,10 @@ namespace PasswordManager
          */
         public Account specificSearch(String accountName)
         {
+            readJson();
+
             LOG.Info("Account specifically being searched is || " + accountName + "||");
+
             foreach (Account account in this.allAccounts)
             {
                 if (account.Site.Equals(accountName, StringComparison.OrdinalIgnoreCase))
@@ -248,8 +291,11 @@ namespace PasswordManager
          */
         public void deleteAccount(Account deletedAcc)
         {
+            readJson();
+
             LOG.Info("Account with the name || " + deletedAcc.Site + "|| will be deleted");
             LOG.Info(deletedAcc.Site + " " + deletedAcc.Username + " " + deletedAcc.Password + " " + deletedAcc.Other);
+            
             this.allAccounts.Remove(deletedAcc);
 
             File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));

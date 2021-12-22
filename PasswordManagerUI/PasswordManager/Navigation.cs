@@ -7,14 +7,11 @@ using System.Windows;
 
 namespace PasswordManager
 {
+    /**
+     * This class is used to house all the navigation of this application
+     */
     class Navigation
     {
-        private static FileManager manager;
-
-        public Navigation()
-        {
-            if (manager == null) manager = new FileManager();
-        }
         public void GoToAddAccount() {
             Application.Current.MainWindow.Content = new AddAccount();
         }
@@ -30,17 +27,13 @@ namespace PasswordManager
         public void GoToGroupedAccounts() {
             Application.Current.MainWindow.Content = new GroupedAccounts();
         }
-        public void GoToMainWindow() { }
-        public void GoToMultipleAccount(string SearchedAccountName) { 
-            MultipleAccountDisplay mad = new MultipleAccountDisplay();
-            mad.load(SearchedAccountName);
-            mad.AccountList.Text = "";
+        public void GoToMainWindow() {
+            Application.Current.MainWindow.Content = new MainWindow();
+        }
 
-            foreach (Account acc in manager.multiAccountFind)
-            {
-                mad.AccountList.Text += acc.Site + "\n";
-            }
-            Application.Current.MainWindow.Content = mad;
+        public void GoToFileConfiguration()
+        {
+            Application.Current.MainWindow.Content = new FileConfiguration();
         }
     }
 }

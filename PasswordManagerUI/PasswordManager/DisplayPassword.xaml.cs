@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using log4net;
 
 namespace PasswordManager
@@ -23,7 +13,7 @@ namespace PasswordManager
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static FileManager manager;
+        private static FileManager manager = new FileManager();
 
         private readonly Navigation nav;
         public bool isFileChanged { get; set; }
@@ -37,8 +27,10 @@ namespace PasswordManager
         {
             InitializeComponent();
             LOG.Info("Display password initilized");
+
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
+
             manager.readJson();
             SearchedAccountName.Focus();
             AccountListScroller.Visibility = Visibility.Hidden;
@@ -58,7 +50,6 @@ namespace PasswordManager
                 {
                     MultipleAccountDisplay mad = new MultipleAccountDisplay();
                     LOG.Info("Changing to Multiple Account Display");
-                    //nav.GoToMultipleAccount(SearchedAccountName.Text);
                     mad.load(SearchedAccountName.Text);
                     mad.AccountList.Text = "";
 
@@ -99,6 +90,10 @@ namespace PasswordManager
             AccountList.Visibility = Visibility.Visible;
             AccountList.Text = "";
 
+            //Temp solution. Whenever after initial setup and you try to click for all accounts, it crashes becaseu all accounts is null
+            
+            if (manager.allAccounts == null) return;
+
             foreach (Account item in manager.allAccounts)
             {
                 AccountList.Text += item.Site +"\n";
@@ -109,28 +104,25 @@ namespace PasswordManager
         private void Add_Account_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Add Account Clicked");
-            //Application.Current.MainWindow.Content = new AddAccount();
             nav.GoToAddAccount();
         }
 
         private void Change_Password_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Change Password Clicked");
-            //Application.Current.MainWindow.Content = new ChangePassword();
             nav.GoToChangePassword();
         }
 
         private void Grouped_Accounts_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Grouped Accounts Clicked");
-            //Application.Current.MainWindow.Content = new GroupedAccounts();
             nav.GoToGroupedAccounts();
         }
 
         private void Delete_Account_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Delete Account Clicked");
-            //Application.Current.MainWindow.Content = new DeleteAccount();
+
             nav.GoToDeleteAccount();
         }
     }

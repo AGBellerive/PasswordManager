@@ -60,7 +60,6 @@ namespace PasswordManager
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
-            //Application.Current.MainWindow.Content = new DisplayPassword();
             nav.GoToDisplayPassword();
         }
 
