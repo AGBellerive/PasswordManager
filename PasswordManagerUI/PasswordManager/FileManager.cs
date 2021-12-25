@@ -24,7 +24,6 @@ namespace PasswordManager
         public FileManager()
         {
             LOG.Info("Filemanager Created");
-            //nav = new Navigation();
             checkForJson();
         }
 

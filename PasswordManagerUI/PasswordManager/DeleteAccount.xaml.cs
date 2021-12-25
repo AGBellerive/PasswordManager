@@ -1,24 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using log4net;
 
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for DeleteAccount.xaml
-    /// </summary>
     public partial class DeleteAccount : Page
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -28,9 +15,10 @@ namespace PasswordManager
         private readonly Navigation nav;
 
         /**
-        * This constructor checks if the filemanager object is created, if it isnt
-        * it creates a new object, then it hides multiple ui elements from the user
-        * to then later be shwon
+         * This constructor checks if the filemanager object is created, if it isnt
+         * it creates a new object, then it hides multiple ui elements from the user
+         * to then later be shown. This constructor also creates a navigation object
+         * to deal with all the navigation of the application
         */
         public DeleteAccount()
         {

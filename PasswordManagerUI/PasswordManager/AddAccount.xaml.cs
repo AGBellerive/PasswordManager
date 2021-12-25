@@ -6,9 +6,6 @@ using log4net;
 
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for AddAccount.xaml
-    /// </summary>
     public partial class AddAccount : Page
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -18,7 +15,8 @@ namespace PasswordManager
         /**
          * This constructor checks if the filemanager object is created, if it isnt
          * it creates a new object, then it hides multiple ui elements from the user
-         * to then later be shwon
+         * to then later be shown. This constructor also creates a navigation object
+         * to deal with all the navigation of the application
          */
         public AddAccount()
         {
@@ -40,7 +38,6 @@ namespace PasswordManager
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Redirecting to Display Password");
-            //Application.Current.MainWindow.Content = new DisplayPassword();
             nav.GoToDisplayPassword();
         }
 
@@ -52,7 +49,6 @@ namespace PasswordManager
 
                 manager.addAccount(AccountBx.Text, UsernameBx.Text, EmailBx.Text, PasswordBx.Text, otherInfoBx.Text);
 
-                //Application.Current.MainWindow.Content = new DisplayPassword();
                 nav.GoToDisplayPassword();
             }
             else

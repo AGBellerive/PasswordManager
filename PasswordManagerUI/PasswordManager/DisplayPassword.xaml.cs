@@ -6,9 +6,6 @@ using log4net;
 
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for DisplayPassword.xaml
-    /// </summary>
     public partial class DisplayPassword : Page
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -19,9 +16,10 @@ namespace PasswordManager
         public bool isFileChanged { get; set; }
 
         /**
-        * This constructor checks if the filemanager object is created, if it isnt
-        * it creates a new object, then it hides multiple ui elements from the user
-        * to then later be shwon
+         * This constructor checks if the filemanager object is created, if it isnt
+         * it creates a new object, then it hides multiple ui elements from the user
+         * to then later be shown. This constructor also creates a navigation object
+         * to deal with all the navigation of the application
         */
         public DisplayPassword()
         {
@@ -38,7 +36,14 @@ namespace PasswordManager
             Other.Visibility = Visibility.Hidden;
         }
 
-
+        /**
+         * Whenever the user types in the testbox field, it is checked if the user
+         * enteres the enter button. At this point its obvious they are trying to search
+         * so once they search, the text is deciphered to wether they are trying to exit
+         * the application, found an account or found many accounts with the similar 
+         * text that is searched. If it is multiple accounts, that is then deletated to
+         * another class
+         */
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Return)
@@ -90,8 +95,7 @@ namespace PasswordManager
             AccountList.Visibility = Visibility.Visible;
             AccountList.Text = "";
 
-            //Temp solution. Whenever after initial setup and you try to click for all accounts, it crashes becaseu all accounts is null
-            
+            //After initial setup, the application crashes becaseu all accounts is null, this fixes
             if (manager.allAccounts == null) return;
 
             foreach (Account item in manager.allAccounts)
@@ -122,7 +126,6 @@ namespace PasswordManager
         private void Delete_Account_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Delete Account Clicked");
-
             nav.GoToDeleteAccount();
         }
     }

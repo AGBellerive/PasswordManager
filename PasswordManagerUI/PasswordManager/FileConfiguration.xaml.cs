@@ -9,12 +9,17 @@ using System.Windows.Input;
 
 namespace PasswordManager
 {
-    /// <summary>
-    /// Interaction logic for FileConfiguration.xaml
-    /// </summary>
     public partial class FileConfiguration : Page
     {
         private FileSetup settings;
+
+        /**
+         * Depending on if the user has already set up the application, this is the landing 
+         * page. Here the user configers their password, hint and file location. This is then
+         * saved in a file called setup.json. The user has to set up a password before they
+         * can set a hint or a file location. I must assume the user has the same amount of 
+         * braincells as a chicken running with its head cut off. 
+         */
         public FileConfiguration()
         {
             InitializeComponent();

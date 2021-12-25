@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace PasswordManager
 {
+    /**
+     * This class is specifically used to parse the password json file
+     * Each account entry will have a site, username, email, password, and 
+     * other is just used for anything else like security questions 
+     */
     class Account
     {
         public string Site { get; set; }
