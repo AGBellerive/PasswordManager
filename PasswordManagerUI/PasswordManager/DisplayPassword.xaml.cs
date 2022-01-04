@@ -34,6 +34,7 @@ namespace PasswordManager
             AccountListScroller.Visibility = Visibility.Hidden;
             otherLbl.Visibility = Visibility.Hidden;
             Other.Visibility = Visibility.Hidden;
+            CopyBtn.Visibility = Visibility.Hidden;
         }
 
         /**
@@ -50,7 +51,7 @@ namespace PasswordManager
             {
                 if (SearchedAccountName.Text.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0); 
                 Account foundAccount = manager.searchAccount(SearchedAccountName.Text);
-                
+
                 if (foundAccount.Site.Equals("MULTI-FIND"))
                 {
                     MultipleAccountDisplay mad = new MultipleAccountDisplay();
@@ -60,7 +61,7 @@ namespace PasswordManager
 
                     foreach (Account acc in manager.multiAccountFind)
                     {
-                        mad.AccountList.Text += acc.Site +"\n";
+                        mad.AccountList.Text += acc.Site + "\n";
                     }
                     Application.Current.MainWindow.Content = mad;
                 }
@@ -71,6 +72,11 @@ namespace PasswordManager
                     UserName.Content = foundAccount.Username;
                     Email.Content = foundAccount.Email;
                     Password.Content = foundAccount.Password;
+
+                    if (foundAccount.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
+                    
+                    else CopyBtn.Visibility = Visibility.Visible;
+                    
 
                     if (foundAccount.Other.Length > 0)
                     {
@@ -127,6 +133,12 @@ namespace PasswordManager
         {
             LOG.Info("Delete Account Clicked");
             nav.GoToDeleteAccount();
+        }
+
+        private void CopyBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(Password.Content.ToString());
+            MessageBox.Show("Password Copied");
         }
     }
 }

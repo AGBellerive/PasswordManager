@@ -29,6 +29,7 @@ namespace PasswordManager
 
             otherLbl.Visibility = Visibility.Hidden;
             Other.Visibility = Visibility.Hidden;
+            CopyBtn.Visibility = Visibility.Hidden;
 
         }
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
@@ -41,6 +42,10 @@ namespace PasswordManager
                 UserName.Content = account.Username;
                 Email.Content = account.Email;
                 Password.Content = account.Password;
+
+                if (account.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
+
+                else CopyBtn.Visibility = Visibility.Visible;
 
                 if (account.Other.Length > 0)
                 {
@@ -66,6 +71,12 @@ namespace PasswordManager
         {
             Application.Current.MainWindow.Content = new DisplayPassword();
 
+        }
+
+        private void CopyBtn_Click(object sender, RoutedEventArgs e)
+        {
+            Clipboard.SetText(Password.Content.ToString());
+            MessageBox.Show("Password Copied");
         }
     }
 }
