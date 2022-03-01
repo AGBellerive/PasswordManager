@@ -193,5 +193,5 @@ obj
 
 PasswordManager/FileManager.cs
 PasswordManager/MainWindow.xaml.cs
-PasswordManagerInstaller/BundleArtifacts
-PasswordManagerInstaller/Images
+PasswordManagerInstaller/BundleArtifacts/
+PasswordManagerInstaller/Images/
