@@ -25,7 +25,7 @@ namespace PasswordManager
             settings = manager.checkForJson();
             masterPassword = settings.HashedPassword;
 
-            LOG.Info("Mainwindow initilized, set up file found "+settings.ToString());
+            LOG.Info("Mainwindow initilized, set up file initilized "+settings.ToString());
         }
 
 

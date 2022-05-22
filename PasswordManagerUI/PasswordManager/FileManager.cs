@@ -72,6 +72,7 @@ namespace PasswordManager
             else
             {
                 nav.GoToFileConfiguration();
+                LOG.Warn("File Not found");
             }
             return settings;
         }

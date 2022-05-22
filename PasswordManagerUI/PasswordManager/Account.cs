@@ -35,5 +35,22 @@ namespace PasswordManager
             this.Password = "";
             this.Other = "";
         }
+
+        public override bool Equals(Object obj)
+        {
+            if (this.GetType().Equals(obj.GetType()))
+            {
+                Account account = (Account)obj;
+                if (this.Username.Equals(account.Username)
+                    && this.Site.Equals(account.Site)
+                    && this.Email.Equals(account.Email)
+                    && this.Password.Equals(account.Password)
+                    && this.Other.Equals(account.Other))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 }
