@@ -41,7 +41,6 @@ namespace PasswordManager
                 if (password.Password.GetHashCode() == masterPassword)
                 {
                     LOG.Info("Password correct");
-
                     Navigation nav = new Navigation();
                     nav.GoToDisplayPassword();
                 }

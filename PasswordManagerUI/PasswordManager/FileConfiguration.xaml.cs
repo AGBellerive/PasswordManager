@@ -48,6 +48,7 @@ namespace PasswordManager
         {
             settings.HashedPassword = passwordBox.Text.GetHashCode();
             settings.Hint = PasswordHintBox.Text;
+            settings.LastLogin = DateTime.Now.ToString();
             File.WriteAllText("setup.json",JsonConvert.SerializeObject(settings, Formatting.Indented));
             
             var stream = File.Create(settings.Path);

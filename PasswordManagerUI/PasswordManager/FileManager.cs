@@ -16,7 +16,7 @@ namespace PasswordManager
     class FileManager
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public List<Account> allAccounts { get; set;} = new List<Account>();
+        public List<Account> allAccounts { get; set; } = new List<Account>();
         public List<Account> multiAccountFind { get; set; } = new List<Account>();
         private string path;
         private readonly Navigation nav = new Navigation();
@@ -39,7 +39,7 @@ namespace PasswordManager
             {
                 json = File.ReadAllText(this.path);
                 this.allAccounts = JsonConvert.DeserializeObject<List<Account>>(json);
-                if(this.allAccounts == null)
+                if (this.allAccounts == null)
                 {
                     this.allAccounts = new List<Account>(1);
                     LOG.Info("JSON file empty");
@@ -61,13 +61,14 @@ namespace PasswordManager
         */
         public FileSetup checkForJson()
         {
-            FileSetup settings = new FileSetup(); 
+            FileSetup settings = new FileSetup();
             if (File.Exists("setup.json"))
             {
                 LOG.Info("File found");
                 string setupText = File.ReadAllText("setup.json");
                 settings = JsonConvert.DeserializeObject<FileSetup>(setupText);
                 this.path = settings.Path;
+                updateLastLogin();
             }
             else
             {
@@ -94,7 +95,7 @@ namespace PasswordManager
             int count = 0;
             Account foundAccount = new Account();
             multiAccountFind = new List<Account>();
-            
+
 
             foreach (Account account in this.allAccounts)
             {
@@ -206,7 +207,7 @@ namespace PasswordManager
 
             bool found = false;
             List<Account> matchedAccounts = new List<Account>();
-            
+
             foreach (Account account in this.allAccounts)
             {
                 if (account.Email.ToLower().Contains(email.ToLower()))
@@ -295,12 +296,36 @@ namespace PasswordManager
 
             LOG.Info("Account with the name || " + deletedAcc.Site + "|| will be deleted");
             LOG.Info(deletedAcc.Site + " " + deletedAcc.Username + " " + deletedAcc.Password + " " + deletedAcc.Other);
-            
+
             this.allAccounts.Remove(deletedAcc);
 
             File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
             LOG.Info("Password file modified");
             MessageBox.Show("Account deleted... Redirecting");
+        }
+
+        /*
+         * This method is in charge of keeping track when the last log in was
+         * This will then be displayed to the user or lock the user out from
+         * trying the password again
+         */
+        public void updateLastLogin()
+        {
+            FileSetup settings = new FileSetup();
+            string setupText = File.ReadAllText("setup.json");
+            settings = JsonConvert.DeserializeObject<FileSetup>(setupText);
+            settings.LastLogin = DateTime.Now.ToString();
+
+            File.WriteAllText("setup.json", JsonConvert.SerializeObject(settings, Formatting.Indented));
+
+        }
+        public string getLastLogIn()
+        {
+            FileSetup settings = new FileSetup();
+            string setupText = File.ReadAllText("setup.json");
+            settings = JsonConvert.DeserializeObject<FileSetup>(setupText);
+
+            return settings.LastLogin;
         }
     }
 }

@@ -35,6 +35,7 @@ namespace PasswordManager
             otherLbl.Visibility = Visibility.Hidden;
             Other.Visibility = Visibility.Hidden;
             CopyBtn.Visibility = Visibility.Hidden;
+            LastLogin.Content = "Last Log In: " + manager.getLastLogIn();
         }
 
         /**
@@ -137,8 +138,10 @@ namespace PasswordManager
 
         private void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
+            Clipboard.SetText(UserName.Content.ToString());
+            System.Threading.Thread.Sleep(100);
             Clipboard.SetText(Password.Content.ToString());
-            MessageBox.Show("Password Copied");
+            MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
         }
     }
 }

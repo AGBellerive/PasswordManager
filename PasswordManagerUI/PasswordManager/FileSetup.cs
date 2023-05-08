@@ -16,12 +16,14 @@ namespace PasswordManager
         public string Path { get; set; }
         public int HashedPassword { get; set; }
         public string Hint { get; set; }
+        public string LastLogin { get; set; }
 
         public FileSetup()
         {
             this.Path = "";
             this.HashedPassword = 0;
             this.Hint = "";
+            this.LastLogin = "";
         }
     }
 }
