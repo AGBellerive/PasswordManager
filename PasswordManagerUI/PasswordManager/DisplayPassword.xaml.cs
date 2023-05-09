@@ -36,6 +36,7 @@ namespace PasswordManager
             Other.Visibility = Visibility.Hidden;
             CopyBtn.Visibility = Visibility.Hidden;
             LastLogin.Content = "Last Log In: " + manager.getLastLogIn();
+            manager.updateLastLogin();
         }
 
         /**

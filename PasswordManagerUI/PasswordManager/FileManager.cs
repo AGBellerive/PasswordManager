@@ -68,7 +68,6 @@ namespace PasswordManager
                 string setupText = File.ReadAllText("setup.json");
                 settings = JsonConvert.DeserializeObject<FileSetup>(setupText);
                 this.path = settings.Path;
-                updateLastLogin();
             }
             else
             {
