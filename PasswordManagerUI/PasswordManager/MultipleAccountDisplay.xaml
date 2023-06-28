@@ -36,5 +36,6 @@
         </ScrollViewer>
         <Label Content="Multiple Accounts Were Found.&#xD;&#xA;Search One of the accounts below." HorizontalAlignment="Left" Height="36" Margin="548,264,0,0" VerticalAlignment="Top" Width="237" FontFamily="Consolas" FontSize="10"/>
         <Button x:Name="returnBtn" Content="Return" HorizontalAlignment="Left" Margin="673,10,0,0" VerticalAlignment="Top" Width="117" Click="returnBtn_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="31" FontFamily="Consolas"/>
+        <Button x:Name="CopyBtn" Content="Copy" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="66" Margin="410,325,0,0" Click="CopyBtn_Click"/>
     </Grid>
 </Page>

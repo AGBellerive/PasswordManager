@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using log4net;
 
 namespace PasswordManager
@@ -26,6 +15,8 @@ namespace PasswordManager
 
         private static FileManager manager;
 
+        private readonly Navigation nav;
+
         /**
         * This constructor checks if the filemanager object is created, if it isnt
         * it creates a new object, then it hides multiple ui elements from the user
@@ -35,10 +26,8 @@ namespace PasswordManager
         {
             InitializeComponent();
             LOG.Info("Group Account Initilized");
-            if (manager == null)
-            {
-                manager = new FileManager();
-            }
+            if (manager == null)  manager = new FileManager();
+            if (nav == null) nav = new Navigation();
             AccountListWithEmail.Focus();
             AccountListScroller.Visibility = Visibility.Hidden;
             AccountListPasswordScroller.Visibility = Visibility.Hidden;
@@ -81,7 +70,7 @@ namespace PasswordManager
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
         {
-            Application.Current.MainWindow.Content = new DisplayPassword();
+            nav.GoToDisplayPassword();
         }
     }
 }

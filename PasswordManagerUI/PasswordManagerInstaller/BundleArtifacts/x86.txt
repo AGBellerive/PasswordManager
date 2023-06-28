@@ -1,0 +1,2 @@
+MainPackage=C:\Users\kokaw\Desktop\Projects\passwordmanager\PasswordManagerUI\PasswordManagerInstaller\bin\x86\Release\PasswordManagerInstaller_2.5.1.0_x86.appx
+SymbolPackage=C:\Users\kokaw\Desktop\Projects\passwordmanager\PasswordManagerUI\PasswordManagerInstaller\obj\x86\Release\Symbols\PasswordManagerInstaller_2.5.1.0_x86.appxsym

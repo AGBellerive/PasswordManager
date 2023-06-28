@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace PasswordManager
 {
+    /**
+     * This class is specifically used to parse the password json file
+     * Each account entry will have a site, username, email, password, and 
+     * other is just used for anything else like security questions 
+     */
     class Account
     {
         public string Site { get; set; }
@@ -29,6 +34,23 @@ namespace PasswordManager
             this.Email = "";
             this.Password = "";
             this.Other = "";
+        }
+
+        public override bool Equals(Object obj)
+        {
+            if (this.GetType().Equals(obj.GetType()))
+            {
+                Account account = (Account)obj;
+                if (this.Username.Equals(account.Username)
+                    && this.Site.Equals(account.Site)
+                    && this.Email.Equals(account.Email)
+                    && this.Password.Equals(account.Password)
+                    && this.Other.Equals(account.Other))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

@@ -1,0 +1,6 @@
+MainPackage=C:\Users\kokaw\Desktop\Projects\passwordmanager\PasswordManagerUI\PasswordManagerInstaller\bin\x64\Release\PasswordManagerInstaller_2.5.1.0_x64.appx
+SymbolPackage=C:\Users\kokaw\Desktop\Projects\passwordmanager\PasswordManagerUI\PasswordManagerInstaller\obj\x64\Release\Symbols\PasswordManagerInstaller_2.5.1.0_x64.appxsym
+ResourcePack=C:\Users\kokaw\Desktop\Projects\passwordmanager\PasswordManagerUI\PasswordManagerInstaller\bin\x64\Release\PasswordManagerInstaller_2.5.1.0_scale-100.appx
+ResourcePack=C:\Users\kokaw\Desktop\Projects\passwordmanager\PasswordManagerUI\PasswordManagerInstaller\bin\x64\Release\PasswordManagerInstaller_2.5.1.0_scale-125.appx
+ResourcePack=C:\Users\kokaw\Desktop\Projects\passwordmanager\PasswordManagerUI\PasswordManagerInstaller\bin\x64\Release\PasswordManagerInstaller_2.5.1.0_scale-150.appx
+ResourcePack=C:\Users\kokaw\Desktop\Projects\passwordmanager\PasswordManagerUI\PasswordManagerInstaller\bin\x64\Release\PasswordManagerInstaller_2.5.1.0_scale-400.appx
