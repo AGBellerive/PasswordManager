@@ -139,8 +139,15 @@ namespace PasswordManager
 
         private void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
-            Clipboard.SetText(UserName.Content.ToString());
-            System.Threading.Thread.Sleep(100);
+            if(UserName.Content.ToString().Length == 0)
+            {
+                Clipboard.SetText(Email.Content.ToString());
+            }
+            else
+            {
+                Clipboard.SetText(UserName.Content.ToString());
+            }
+            System.Threading.Thread.Sleep(300);
             Clipboard.SetText(Password.Content.ToString());
             MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
         }
