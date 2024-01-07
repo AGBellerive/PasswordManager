@@ -16,7 +16,7 @@ namespace PasswordManager
     class FileManager
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        public List<Account> allAccounts { get; set; } = new List<Account>();
+        public static List<Account> allAccounts { get; set; } = new List<Account>();
         public List<Account> multiAccountFind { get; set; } = new List<Account>();
         private string path;
         private readonly Navigation nav = new Navigation();
@@ -25,6 +25,7 @@ namespace PasswordManager
         {
             LOG.Info("Filemanager Created");
             checkForJson();
+            readJson();
         }
 
         /**
@@ -38,10 +39,10 @@ namespace PasswordManager
             try
             {
                 json = File.ReadAllText(this.path);
-                this.allAccounts = JsonConvert.DeserializeObject<List<Account>>(json);
-                if (this.allAccounts == null)
+                FileManager.allAccounts = JsonConvert.DeserializeObject<List<Account>>(json);
+                if (FileManager.allAccounts == null)
                 {
-                    this.allAccounts = new List<Account>(1);
+                    FileManager.allAccounts = new List<Account>(1);
                     LOG.Info("JSON file empty");
                 }
                 LOG.Info("JSON file sucessfully read");
@@ -96,7 +97,7 @@ namespace PasswordManager
             multiAccountFind = new List<Account>();
 
 
-            foreach (Account account in this.allAccounts)
+            foreach (Account account in FileManager.allAccounts)
             {
                 if (account.Site.ToLower().Contains(accountName.ToLower()))
                 {
@@ -144,7 +145,7 @@ namespace PasswordManager
 
             LOG.Info("Password being modified is for the account || " + account.Site + " ||");
 
-            int position = this.allAccounts.IndexOf(account);
+            int position = FileManager.allAccounts.IndexOf(account);
             allAccounts[position].Password = newPassword;
 
             File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
@@ -164,7 +165,7 @@ namespace PasswordManager
             LOG.Info("New Accouint being added by the name || " + accountName + " ||");
             Account newAccount = new Account(accountName, userName, email, password, other);
 
-            this.allAccounts.Add(newAccount);
+            FileManager.allAccounts.Add(newAccount);
 
             File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
             LOG.Info("Password file modified");
@@ -181,7 +182,7 @@ namespace PasswordManager
             bool found = false;
             List<Account> matchedAccounts = new List<Account>();
 
-            foreach (Account account in this.allAccounts)
+            foreach (Account account in FileManager.allAccounts)
             {
                 if (account.Password.Equals(password))
                 {
@@ -207,7 +208,7 @@ namespace PasswordManager
             bool found = false;
             List<Account> matchedAccounts = new List<Account>();
 
-            foreach (Account account in this.allAccounts)
+            foreach (Account account in FileManager.allAccounts)
             {
                 if (account.Email.ToLower().Contains(email.ToLower()))
                 {
@@ -252,7 +253,7 @@ namespace PasswordManager
         {
             readJson();
 
-            foreach (Account account in this.allAccounts)
+            foreach (Account account in FileManager.allAccounts)
             {
                 if (account.Site.Equals(accountName, StringComparison.OrdinalIgnoreCase))
                 {
@@ -272,7 +273,7 @@ namespace PasswordManager
 
             LOG.Info("Account specifically being searched is || " + accountName + "||");
 
-            foreach (Account account in this.allAccounts)
+            foreach (Account account in FileManager.allAccounts)
             {
                 if (account.Site.Equals(accountName, StringComparison.OrdinalIgnoreCase))
                 {
@@ -296,7 +297,7 @@ namespace PasswordManager
             LOG.Info("Account with the name || " + deletedAcc.Site + "|| will be deleted");
             LOG.Info(deletedAcc.Site + " " + deletedAcc.Username + " " + deletedAcc.Password + " " + deletedAcc.Other);
 
-            this.allAccounts.Remove(deletedAcc);
+            FileManager.allAccounts.Remove(deletedAcc);
 
             File.WriteAllText(this.path, JsonConvert.SerializeObject(allAccounts, Formatting.Indented));
             LOG.Info("Password file modified");
