@@ -21,6 +21,7 @@ to this same file. This file should be
 backed up every now and then just to be 
 safe. 
 
+~~
 # Installer
 To obtain the installer for this application
 it requires a few steps.
@@ -31,3 +32,4 @@ it requires a few steps.
 (Current user is just for the accout adn local is for the whole computer)
 4) Choose "Place all certificates in the following store" and choose "Trusted Root Certification Authorities", Press ok
 5) Now you can go back to the APPXBUNDLE and install the applications 
+~~

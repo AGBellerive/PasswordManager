@@ -25,7 +25,6 @@ namespace PasswordManager
             LOG.Info("Change password initilized");
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
-            manager.readJson();
 
             SearchedAccountName.Focus();
             UpdateBtn.Visibility = Visibility.Hidden;
@@ -74,7 +73,7 @@ namespace PasswordManager
             AccountList.Visibility = Visibility.Visible;
             AccountList.Text = "";
 
-            foreach (Account item in manager.allAccounts)
+            foreach (Account item in FileManager.allAccounts)
             {
                 AccountList.Text += item.Site + "\n";
             }

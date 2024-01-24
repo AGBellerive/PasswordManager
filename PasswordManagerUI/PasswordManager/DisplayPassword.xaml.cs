@@ -29,7 +29,7 @@ namespace PasswordManager
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
 
-            manager.readJson();
+            //manager.readJson();
             SearchedAccountName.Focus();
             AccountListScroller.Visibility = Visibility.Hidden;
             otherLbl.Visibility = Visibility.Hidden;
@@ -104,11 +104,11 @@ namespace PasswordManager
             AccountList.Text = "";
 
             //After initial setup, the application crashes becaseu all accounts is null, this fixes
-            if (manager.allAccounts == null) return;
+            if (FileManager.allAccounts == null) return;
 
-            foreach (Account item in manager.allAccounts)
+            foreach (Account account in FileManager.allAccounts)
             {
-                AccountList.Text += item.Site +"\n";
+                AccountList.Text += account.Site +"\n";
             }
             dropDown.IsExpanded = false;
         }

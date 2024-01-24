@@ -191,7 +191,5 @@ StyleCop.Cache
 bin
 obj
 
-PasswordManager/FileManager.cs
-PasswordManager/MainWindow.xaml.cs
 PasswordManagerInstaller/BundleArtifacts/
 PasswordManagerInstaller/Images/
