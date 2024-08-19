@@ -191,5 +191,5 @@ StyleCop.Cache
 bin
 obj
 
-PasswordManagerInstaller/BundleArtifacts/
-PasswordManagerInstaller/Images/
+PasswordManagerUI/PasswordManagerInstaller/
+PasswordManagerUI/.vs/

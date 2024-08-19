@@ -139,7 +139,13 @@ namespace PasswordManager
 
         private void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
-            if(UserName.Content.ToString().Length == 0)
+            if (UserName.Content.ToString().Length != 0 && Email.Content.ToString().Length != 0)
+            {
+                Clipboard.SetText(UserName.Content.ToString());
+                System.Threading.Thread.Sleep(300);
+                Clipboard.SetText(Email.Content.ToString());
+            }
+            else if(UserName.Content.ToString().Length == 0)
             {
                 Clipboard.SetText(Email.Content.ToString());
             }
