@@ -70,10 +70,10 @@ namespace PasswordManager
 
                 else if (foundAccount != null)
                 {
-                    AccountName.Content = foundAccount.Site;
-                    UserName.Content = foundAccount.Username;
-                    Email.Content = foundAccount.Email;
-                    Password.Content = foundAccount.Password;
+                    AccountName.Text = foundAccount.Site;
+                    UserName.Text = foundAccount.Username;
+                    Email.Text = foundAccount.Email;
+                    Password.Text = foundAccount.Password;
 
                     if (foundAccount.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
                     
@@ -85,7 +85,7 @@ namespace PasswordManager
                         otherLbl.Visibility = Visibility.Visible;
                         Other.Visibility = Visibility.Visible;
 
-                        Other.Content = foundAccount.Other;
+                        Other.Text = foundAccount.Other;
                     }
                     else
                     {
@@ -137,24 +137,25 @@ namespace PasswordManager
             nav.GoToDeleteAccount();
         }
 
-        private void CopyBtn_Click(object sender, RoutedEventArgs e)
+        public void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (UserName.Content.ToString().Length != 0 && Email.Content.ToString().Length != 0)
+            LOG.Info("Copying credentials");
+            if (UserName.Text.ToString().Length != 0 && Email.Text.ToString().Length != 0)
             {
-                Clipboard.SetText(UserName.Content.ToString());
+                Clipboard.SetText(UserName.Text.ToString());
                 System.Threading.Thread.Sleep(300);
-                Clipboard.SetText(Email.Content.ToString());
+                Clipboard.SetText(Email.Text.ToString());
             }
-            else if(UserName.Content.ToString().Length == 0)
+            else if(UserName.Text.ToString().Length == 0)
             {
-                Clipboard.SetText(Email.Content.ToString());
+                Clipboard.SetText(Email.Text.ToString());
             }
             else
             {
-                Clipboard.SetText(UserName.Content.ToString());
+                Clipboard.SetText(UserName.Text.ToString());
             }
             System.Threading.Thread.Sleep(300);
-            Clipboard.SetText(Password.Content.ToString());
+            Clipboard.SetText(Password.Text.ToString());
             MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
         }
     }

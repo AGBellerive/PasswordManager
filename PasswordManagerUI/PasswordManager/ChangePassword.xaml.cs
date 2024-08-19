@@ -48,10 +48,10 @@ namespace PasswordManager
 
                 if (foundAccount != null)
                 {
-                    AccountName.Content = foundAccount.Site;
-                    UserName.Content = foundAccount.Username;
-                    Email.Content = foundAccount.Email;
-                    Password.Content = foundAccount.Password;
+                    AccountName.Text = foundAccount.Site;
+                    UserName.Text = foundAccount.Username;
+                    Email.Text = foundAccount.Email;
+                    Password.Text = foundAccount.Password;
 
                     NewPassword.Visibility = Visibility.Visible;
                     UpdateBtn.Visibility = Visibility.Visible;

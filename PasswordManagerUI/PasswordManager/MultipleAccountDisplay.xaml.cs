@@ -38,10 +38,10 @@ namespace PasswordManager
             {
                 Account account = manager.searchMultipleAccounts(SearchedAccountName.Text);
 
-                AccountName.Content = account.Site;
-                UserName.Content = account.Username;
-                Email.Content = account.Email;
-                Password.Content = account.Password;
+                AccountName.Text = account.Site;
+                UserName.Text = account.Username;
+                Email.Text = account.Email;
+                Password.Text = account.Password;
 
                 if (account.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
 
@@ -52,7 +52,7 @@ namespace PasswordManager
                     otherLbl.Visibility = Visibility.Visible;
                     Other.Visibility = Visibility.Visible;
 
-                    Other.Content = account.Other;
+                    Other.Text = account.Other;
                 }
                 else
                 {
@@ -75,17 +75,9 @@ namespace PasswordManager
 
         private void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (UserName.Content.ToString().Length == 0)
-            {
-                Clipboard.SetText(Email.Content.ToString());
-            }
-            else
-            {
-                Clipboard.SetText(UserName.Content.ToString());
-            }
-            System.Threading.Thread.Sleep(300);
-            Clipboard.SetText(Password.Content.ToString());
-            MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
+            //This is so that the main display password copy function is shared and no code duplication
+            DisplayPassword dp = new DisplayPassword();
+            dp.CopyBtn_Click(sender, e);
         }
     }
 }

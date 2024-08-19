@@ -59,10 +59,10 @@ namespace PasswordManager
 
                 if (accountToBeDeleted != null)
                 {
-                    AccountName.Content = accountToBeDeleted.Site;
-                    UserName.Content = accountToBeDeleted.Username;
-                    Email.Content = accountToBeDeleted.Email;
-                    Password.Content = accountToBeDeleted.Password;
+                    AccountName.Text = accountToBeDeleted.Site;
+                    UserName.Text = accountToBeDeleted.Username;
+                    Email.Text = accountToBeDeleted.Email;
+                    Password.Text = accountToBeDeleted.Password;
 
                     deleteBtn.Visibility = Visibility.Visible;
 
@@ -71,7 +71,7 @@ namespace PasswordManager
                         otherLbl.Visibility = Visibility.Visible;
                         Other.Visibility = Visibility.Visible;
 
-                        Other.Content = accountToBeDeleted.Other;
+                        Other.Text = accountToBeDeleted.Other;
                     }
                     else
                     {

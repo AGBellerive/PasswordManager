@@ -19,7 +19,7 @@ and lastly your last log in. This process will create a configuration file, `../
 `todo: find a way to link to a remote db`
 
 Once that is set up, you will be redirected to enter the master password to enter the vault. 
-When you enter the vault, you can now add accounts to be saved in your password file (format found below) 
+When you enter the vault, you can now add accounts to be saved in your password file ([Format](https://github.com/AGBellerive/PasswordManager?tab=readme-ov-file#format) found below) 
 and search for accounts. This will display information pertaining to that specific account. 
 
 You will have a few options to navigate the data from the password file. 
