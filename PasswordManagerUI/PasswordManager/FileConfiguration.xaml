@@ -9,17 +9,17 @@
       Title="FileConfiguration">
 
     <Grid Background="{StaticResource PrimaryBlueBrush}">
-        <Label Content="Enter a password for this application along with a hint for the password" HorizontalAlignment="Left" Height="31" Margin="29,64,0,0" VerticalAlignment="Top" Width="749" FontFamily="{StaticResource LabelFont}" FontSize="16"/>
+        <Label Content="Enter a password for this application along with a hint for the password" HorizontalAlignment="Left" Height="31" Margin="29,64,0,0" VerticalAlignment="Top" Width="749" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
 
-        <Button x:Name="Browsebtn" Content="Browse Files" HorizontalAlignment="Left" VerticalAlignment="Top" Height="31" Width="162" Margin="165,313,0,0" FontFamily="{StaticResource LabelFont}" Background="White" BorderBrush="{x:Null}" Click="Browsrbtn_Click"/>
-        <Button x:Name="ConfirmBtn" Content="Confirm" HorizontalAlignment="Left" Height="31" Margin="332,313,0,0" VerticalAlignment="Top" Width="162" FontFamily="{StaticResource LabelFont}" Background="White" BorderBrush="{x:Null}" Click="Confirmbtn_Click"/>
+        <Button x:Name="Browsebtn" Content="Browse Files" HorizontalAlignment="Left" VerticalAlignment="Top" Height="31" Width="162" Margin="165,313,0,0" FontFamily="{StaticResource UniversalFont}" Background="{StaticResource SecondaryColorBrush}" BorderBrush="{x:Null}" Click="Browsrbtn_Click" Foreground="White"/>
+        <Button x:Name="ConfirmBtn" Content="Confirm" HorizontalAlignment="Left" Height="31" Margin="332,313,0,0" VerticalAlignment="Top" Width="162" FontFamily="{StaticResource UniversalFont}" Background="{StaticResource PositiveButtonBrush}" BorderBrush="{x:Null}" Click="Confirmbtn_Click"/>
 
-        <Label Content="Password" HorizontalAlignment="Left" Height="31" Margin="29,141,0,0" VerticalAlignment="Top" Width="98" FontFamily="{StaticResource LabelFont}" FontSize="16"/>
-        <TextBox x:Name="passwordBox" HorizontalAlignment="Left" Height="28" Margin="165,144,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18" FontFamily="{StaticResource LabelFont}" KeyDown="passwordBox_KeyDown"/>
+        <Label Content="Password" HorizontalAlignment="Left" Height="31" Margin="29,141,0,0" VerticalAlignment="Top" Width="98" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
+        <TextBox x:Name="passwordBox" HorizontalAlignment="Left" Height="28" Margin="165,144,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18" FontFamily="{StaticResource UniversalFont}" KeyDown="passwordBox_KeyDown"/>
 
-        <Label Content="Password Hint" HorizontalAlignment="Left" Height="31" Margin="29,202,0,0" VerticalAlignment="Top" Width="140" FontFamily="{StaticResource LabelFont}" FontSize="16"/>
-        <TextBox x:Name="PasswordHintBox" HorizontalAlignment="Left" Height="28" Margin="165,208,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18"  FontFamily="{StaticResource LabelFont}"/>
+        <Label Content="Password Hint" HorizontalAlignment="Left" Height="31" Margin="29,202,0,0" VerticalAlignment="Top" Width="140" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
+        <TextBox x:Name="PasswordHintBox" HorizontalAlignment="Left" Height="28" Margin="165,208,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18"  FontFamily="{StaticResource UniversalFont}"/>
         
-        <Label x:Name="PathLbl" HorizontalAlignment="Left" Height="31" Margin="29,262,0,0" VerticalAlignment="Top" Width="459" FontFamily="{StaticResource LabelFont}" FontSize="16"/>
+        <Label x:Name="PathLbl" HorizontalAlignment="Left" Height="31" Margin="29,262,0,0" VerticalAlignment="Top" Width="459" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
     </Grid>
 </Page>

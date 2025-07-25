@@ -17,7 +17,7 @@ namespace PasswordManager
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static List<Account> allAccounts { get; set; } = new List<Account>();
-        public List<Account> multiAccountFind { get; set; } = new List<Account>();
+        public static List<Account> multiAccountFind { get; set; } = new List<Account>();
         private string path;
         private readonly Navigation nav = new Navigation();
 

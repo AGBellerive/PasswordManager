@@ -32,22 +32,23 @@ You will have a few options to navigate the data from the password file.
 **Remember to perodically back up your password file elsewhere.** There are logs that will keep track of things done in the application so you can recover it, but it is time consuming
 # Format 
 <pre>
+ 
 [   
-    {
-    "Site": "Example Site", 
-    "Username": "Example Username", 
-    "Email": "Email@Email.com", 
-    "Password": "ABC123", 
-    "Others" : "Extra information "
-    },
-    {
-    "Site": "Github", 
-    "Username": "octocat", 
-    "Email": "Email@Email.com", 
-    "Password": "pa55w0rd", 
-    "Others" : "anthropomorphized “octocat” with five octopus-like arms"
-    },  
-     ...
+  {
+    "Site": "Example Site",
+    "Username": "Example Username",
+    "Email": "Email@Email.com",
+    "Password": "ABC123",
+    "Other": "Extra information"
+  },
+  {
+    "Site": "Github",
+    "Username": "octocat",
+    "Email": "Email@Email.com",
+    "Password": "pa55w0rd",
+    "Other": "anthropomorphized “octocat” with five octopus-like arms"
+  },
+  ...
 ]
 </pre> 
 

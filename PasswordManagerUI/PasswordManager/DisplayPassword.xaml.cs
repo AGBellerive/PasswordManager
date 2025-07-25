@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using log4net;
 
 namespace PasswordManager
@@ -37,6 +38,7 @@ namespace PasswordManager
             CopyBtn.Visibility = Visibility.Hidden;
             LastLogin.Content = "Last Log In: " + manager.getLastLogIn();
             manager.updateLastLogin();
+            AccountListBox.ItemsSource = FileManager.allAccounts; // Loads the accounts to the list
         }
 
         /**
@@ -59,39 +61,13 @@ namespace PasswordManager
                     MultipleAccountDisplay mad = new MultipleAccountDisplay();
                     LOG.Info("Changing to Multiple Account Display");
                     mad.load(SearchedAccountName.Text);
-                    mad.AccountList.Text = "";
-
-                    foreach (Account acc in manager.multiAccountFind)
-                    {
-                        mad.AccountList.Text += acc.Site + "\n";
-                    }
+                    
                     Application.Current.MainWindow.Content = mad;
                 }
 
                 else if (foundAccount != null)
                 {
-                    AccountName.Text = foundAccount.Site;
-                    UserName.Text = foundAccount.Username;
-                    Email.Text = foundAccount.Email;
-                    Password.Text = foundAccount.Password;
-
-                    if (foundAccount.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
-                    
-                    else CopyBtn.Visibility = Visibility.Visible;
-                    
-
-                    if (foundAccount.Other.Length > 0)
-                    {
-                        otherLbl.Visibility = Visibility.Visible;
-                        Other.Visibility = Visibility.Visible;
-
-                        Other.Text = foundAccount.Other;
-                    }
-                    else
-                    {
-                        otherLbl.Visibility = Visibility.Hidden;
-                        Other.Visibility = Visibility.Hidden;
-                    }
+                    PopulateLabels(foundAccount);
                 }
             }
         }
@@ -100,16 +76,12 @@ namespace PasswordManager
         {
             LOG.Info("All accounts displaying");
             AccountListScroller.Visibility = Visibility.Visible;
-            AccountList.Visibility = Visibility.Visible;
-            AccountList.Text = "";
+           
 
             //After initial setup, the application crashes becaseu all accounts is null, this fixes
             if (FileManager.allAccounts == null) return;
 
-            foreach (Account account in FileManager.allAccounts)
-            {
-                AccountList.Text += account.Site +"\n";
-            }
+           
             dropDown.IsExpanded = false;
         }
 
@@ -143,7 +115,7 @@ namespace PasswordManager
             if (UserName.Text.ToString().Length != 0 && Email.Text.ToString().Length != 0)
             {
                 Clipboard.SetText(UserName.Text.ToString());
-                System.Threading.Thread.Sleep(300);
+                System.Threading.Thread.Sleep(150);
                 Clipboard.SetText(Email.Text.ToString());
             }
             else if(UserName.Text.ToString().Length == 0)
@@ -154,9 +126,46 @@ namespace PasswordManager
             {
                 Clipboard.SetText(UserName.Text.ToString());
             }
-            System.Threading.Thread.Sleep(300);
+            System.Threading.Thread.Sleep(150);
             Clipboard.SetText(Password.Text.ToString());
             MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
+            CopyBtn.Background = (Brush)Application.Current.Resources["PositiveButtonBrush"];
+        }
+
+        private void PopulateLabels(Account foundAccount)
+        {
+            AccountName.Text = foundAccount.Site;
+            UserName.Text = foundAccount.Username;
+            Email.Text = foundAccount.Email;
+            Password.Text = foundAccount.Password;
+
+            if (foundAccount.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
+
+            else CopyBtn.Visibility = Visibility.Visible;
+
+
+            if (foundAccount.Other.Length > 0)
+            {
+                otherLbl.Visibility = Visibility.Visible;
+                Other.Visibility = Visibility.Visible;
+
+                Other.Text = foundAccount.Other;
+            }
+            else
+            {
+                otherLbl.Visibility = Visibility.Hidden;
+                Other.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void AccountTextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(sender is TextBlock tb && tb.DataContext is Account clickedAccount)
+            {
+                Account foundAccount = manager.searchAccount(clickedAccount.Site);
+                PopulateLabels(foundAccount);
+
+            }
         }
     }
 }

@@ -30,6 +30,7 @@ namespace PasswordManager
             otherLbl.Visibility = Visibility.Hidden;
             Other.Visibility = Visibility.Hidden;
             CopyBtn.Visibility = Visibility.Hidden;
+            AccountListBox.ItemsSource = FileManager.multiAccountFind;
 
         }
         private void OnKeyDownHandler(object sender, KeyEventArgs e)
@@ -78,6 +79,42 @@ namespace PasswordManager
             //This is so that the main display password copy function is shared and no code duplication
             DisplayPassword dp = new DisplayPassword();
             dp.CopyBtn_Click(sender, e);
+        }
+
+        private void PopulateLabels(Account foundAccount)
+        {
+            AccountName.Text = foundAccount.Site;
+            UserName.Text = foundAccount.Username;
+            Email.Text = foundAccount.Email;
+            Password.Text = foundAccount.Password;
+
+            if (foundAccount.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
+
+            else CopyBtn.Visibility = Visibility.Visible;
+
+
+            if (foundAccount.Other.Length > 0)
+            {
+                otherLbl.Visibility = Visibility.Visible;
+                Other.Visibility = Visibility.Visible;
+
+                Other.Text = foundAccount.Other;
+            }
+            else
+            {
+                otherLbl.Visibility = Visibility.Hidden;
+                Other.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void AccountTextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock tb && tb.DataContext is Account clickedAccount)
+            {
+                Account foundAccount = manager.searchAccount(clickedAccount.Site);
+                PopulateLabels(foundAccount);
+
+            }
         }
     }
 }
