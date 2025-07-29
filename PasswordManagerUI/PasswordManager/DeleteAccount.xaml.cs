@@ -29,6 +29,7 @@ namespace PasswordManager
 
             SearchedAccountName.Focus();
             deleteBtn.Visibility = Visibility.Hidden;
+            AccountListBox.ItemsSource = FileManager.allAccounts;
             DisplayAllAccounts();
         }
 
@@ -36,13 +37,6 @@ namespace PasswordManager
         {
             LOG.Info("Displaying all accounts");
             AccountListScroller.Visibility = Visibility.Visible;
-            AccountList.Visibility = Visibility.Visible;
-            AccountList.Text = "";
-
-            foreach (Account item in FileManager.allAccounts)
-            {
-                AccountList.Text += item.Site + "\n";
-            }
         }
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
@@ -59,25 +53,10 @@ namespace PasswordManager
 
                 if (accountToBeDeleted != null)
                 {
-                    AccountName.Text = accountToBeDeleted.Site;
-                    UserName.Text = accountToBeDeleted.Username;
-                    Email.Text = accountToBeDeleted.Email;
-                    Password.Text = accountToBeDeleted.Password;
 
-                    deleteBtn.Visibility = Visibility.Visible;
+                    PopulateLabels(accountToBeDeleted);
 
-                    if (accountToBeDeleted.Other.Length > 0)
-                    {
-                        otherLbl.Visibility = Visibility.Visible;
-                        Other.Visibility = Visibility.Visible;
-
-                        Other.Text = accountToBeDeleted.Other;
-                    }
-                    else
-                    {
-                        otherLbl.Visibility = Visibility.Hidden;
-                        Other.Visibility = Visibility.Hidden;
-                    }
+                    
                 }
             }
         }
@@ -86,6 +65,39 @@ namespace PasswordManager
         {
             manager.deleteAccount(accountToBeDeleted);
             returnBtn_Click(sender,e);
+        }
+
+        private void PopulateLabels(Account accountToBeDeleted)
+        {
+            AccountName.Text = accountToBeDeleted.Site;
+            UserName.Text = accountToBeDeleted.Username;
+            Email.Text = accountToBeDeleted.Email;
+            Password.Text = accountToBeDeleted.Password;
+            deleteBtn.Visibility = Visibility.Visible;
+
+            if (accountToBeDeleted.Other.Length > 0)
+            {
+                otherLbl.Visibility = Visibility.Visible;
+                Other.Visibility = Visibility.Visible;
+
+                Other.Text = accountToBeDeleted.Other;
+            }
+            else
+            {
+                otherLbl.Visibility = Visibility.Hidden;
+                Other.Visibility = Visibility.Hidden;
+            }
+
+        }
+
+        private void AccountTextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is TextBlock tb && tb.DataContext is Account clickedAccount)
+            {
+                Account foundAccount = manager.searchAccount(clickedAccount.Site);
+                PopulateLabels(foundAccount);
+
+            }
         }
     }
 }

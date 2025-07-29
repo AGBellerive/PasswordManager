@@ -95,6 +95,5 @@ namespace PasswordManager
 
             }
         }
-    
-}
+    }
 }

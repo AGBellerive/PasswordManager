@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:PasswordManager"
       mc:Ignorable="d" 
-      d:DesignHeight="500" d:DesignWidth="800"
+      Style="{StaticResource PageTheme}"
       Title="MultipleAccountDisplay">
 
     <Grid Background="{StaticResource SecondaryColorBrush}">
@@ -32,7 +32,7 @@
         <Label Content="Password" HorizontalAlignment="Left" Height="33" Margin="29,326,0,0" VerticalAlignment="Top" Width="89" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
         <Label  x:Name="otherLbl" Content="Additional information" HorizontalAlignment="Left" Height="28" Margin="29,380,0,0" VerticalAlignment="Top" Width="209" FontFamily="{StaticResource UniversalFont}" Visibility="Visible" FontSize="16" />
 
-        <ScrollViewer x:Name="AccountListScroller" HorizontalAlignment="Left" Height="145" Margin="553,333,0,0" VerticalAlignment="Top" Width="237" Visibility="Visible">
+        <ScrollViewer x:Name="AccountListScroller" Style="{StaticResource ScrollViewerTheme}" Visibility="Visible">
             <ListBox x:Name="AccountListBox" BorderThickness="0" Background="Transparent">
                 <ListBox.ItemTemplate>
                     <DataTemplate>

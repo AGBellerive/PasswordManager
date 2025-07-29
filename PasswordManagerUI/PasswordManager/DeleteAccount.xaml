@@ -5,12 +5,13 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:PasswordManager"
       mc:Ignorable="d" 
-      d:DesignHeight="500" d:DesignWidth="800"
+      Style="{StaticResource PageTheme}"
       Title="DeleteAccount">
 
-    <Grid Background="White">
-        <Label Content="Enter the account you want to delete" HorizontalAlignment="Left" Height="27" Margin="553,131,0,0" VerticalAlignment="Top" Width="237" FontFamily="{StaticResource UniversalFont}" FontSize="10"/>
-        <TextBox x:Name="SearchedAccountName" HorizontalAlignment="Left" Height="37" Margin="553,163,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="225" BorderBrush="#FF64B4DD" KeyDown="OnKeyDownHandler" BorderThickness="2" FontSize="18" FontWeight="Bold"/>
+    <Grid Background="{StaticResource SecondaryColorBrush}">
+        <Label Content="Enter the account you want to delete" HorizontalAlignment="Left"  Margin="553,145,0,0" VerticalAlignment="Top" FontFamily="{StaticResource UniversalFont}" FontSize="10" Padding="0" Foreground="White"/>
+
+        <TextBox x:Name="SearchedAccountName" Style="{StaticResource TextBoxTheme}" Margin="553,163,0,0" KeyDown="OnKeyDownHandler"/>
         <TextBlock x:Name="HelpBx" HorizontalAlignment="Left" TextWrapping="Wrap"  VerticalAlignment="Top" Height="500" Width="548" FontSize="8" TextAlignment="Center" Margin="0,0,0,0">
             <TextBlock.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -31,10 +32,16 @@
         <Label Content="Password" HorizontalAlignment="Left" Height="33" Margin="29,327,0,0" VerticalAlignment="Top" Width="90" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
         <Label  x:Name="otherLbl" Content="Additional information" HorizontalAlignment="Left" Height="28" Margin="29,380,0,0" VerticalAlignment="Top" Width="209" FontFamily="{StaticResource UniversalFont}" Visibility="Visible" FontSize="16" />
 
-        <ScrollViewer x:Name="AccountListScroller" HorizontalAlignment="Left" Height="125" Margin="553,333,0,0" VerticalAlignment="Top" Width="225" Visibility="Visible">
-            <TextBlock  x:Name="AccountList" TextWrapping="Wrap" Visibility="Visible" FontSize="16"/>
+        <ScrollViewer x:Name="AccountListScroller" Style="{StaticResource ScrollViewerTheme}" Visibility="Visible">
+            <ListBox x:Name="AccountListBox" BorderThickness="0" Background="Transparent">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text ="{Binding Site}" Padding="2px" Cursor="Hand" Foreground="White" TextDecorations="Underline" MouseLeftButtonDown="AccountTextBlock_MouseLeftButtonDown" FontWeight="Bold" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </ScrollViewer>
-        <Button x:Name="returnBtn" Content="Return" HorizontalAlignment="Left" Margin="673,10,0,0" VerticalAlignment="Top" Width="117" Click="returnBtn_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="31" FontFamily="{StaticResource UniversalFont}"/>
-        <Button x:Name="deleteBtn" Content="Delete" HorizontalAlignment="Left" Height="33" Margin="388,141,0,0" VerticalAlignment="Top" Width="109" Click="Delete_Button_Click" Background="Red" BorderBrush="{x:Null}"/>
+        <Button x:Name="returnBtn" Content="Return" Style="{StaticResource ReturnButton}" Click="returnBtn_Click"/>
+        <Button x:Name="deleteBtn" Content="Delete" Style="{StaticResource ReturnButton}" Margin="388,141,0,0" Click="Delete_Button_Click" Background="{StaticResource NegativeButtonBrush}" Foreground="White"/>
     </Grid>
 </Page>

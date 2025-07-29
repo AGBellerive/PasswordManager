@@ -162,7 +162,7 @@ namespace PasswordManager
         {
             if(sender is TextBlock tb && tb.DataContext is Account clickedAccount)
             {
-                Account foundAccount = manager.searchAccount(clickedAccount.Site);
+                Account foundAccount = manager.specificSearch(clickedAccount.Site);
                 PopulateLabels(foundAccount);
 
             }

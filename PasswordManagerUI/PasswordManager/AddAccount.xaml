@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:PasswordManager"
       mc:Ignorable="d" 
-      d:DesignHeight="500" d:DesignWidth="800"
+      Style="{StaticResource PageTheme}"
       Title="AddAccount">
 
     <Grid Background="{StaticResource PrimaryBlueBrush}">
@@ -15,17 +15,17 @@
         <Label Content="Password" HorizontalAlignment="Left" Height="31" Margin="29,258,0,0" VerticalAlignment="Top" Width="104" Background="{x:Null}" Foreground="Black" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
         <Label Content="Other Info" HorizontalAlignment="Left" Height="31" Margin="29,318,0,0" VerticalAlignment="Top" Width="118" Background="{x:Null}" Foreground="Black" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
 
-        <TextBox x:Name="AccountBx" HorizontalAlignment="Left" Height="28" Margin="150,78,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18" FontFamily="{StaticResource UniversalFont}" KeyDown="AccountBx_KeyDown"/>
-        <TextBox x:Name="UsernameBx" HorizontalAlignment="Left" Height="28" Margin="150,138,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18" FontFamily="{StaticResource UniversalFont}" Visibility="visible"/>
-        <TextBox x:Name="EmailBx" HorizontalAlignment="Left" Height="28" Margin="150,198,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18"  FontFamily="{StaticResource UniversalFont}" Visibility="visible"/>
-        <TextBox x:Name="PasswordBx" HorizontalAlignment="Left" Height="28" Margin="150,258,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18"  FontFamily="{StaticResource UniversalFont}" Visibility="visible"/>
-        <TextBox x:Name="otherInfoBx" HorizontalAlignment="Left" Height="70" Margin="150,318,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="323" Background="{x:Null}" Foreground="Black" FontSize="18"  FontFamily="{StaticResource UniversalFont}" Visibility="visible" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
+        <TextBox x:Name="AccountBx" Style ="{StaticResource TextBoxTheme}" Margin="150,78,0,0" Width="323" Foreground="Black" KeyDown="AccountBx_KeyDown"/>
+        <TextBox x:Name="UsernameBx" Style ="{StaticResource TextBoxTheme}" Margin="150,138,0,0" Width="323" Foreground="Black" Visibility="visible"/>
+        <TextBox x:Name="EmailBx" Style ="{StaticResource TextBoxTheme}" Margin="150,198,0,0" Width="323" Foreground="Black" Visibility="visible"/>
+        <TextBox x:Name="PasswordBx" Style ="{StaticResource TextBoxTheme}" Margin="150,258,0,0" Width="323" Foreground="Black" Visibility="visible"/>
+        <TextBox x:Name="otherInfoBx" Style ="{StaticResource TextBoxTheme}" Height="70" Margin="150,318,0,0" Width="323" Foreground="Black" Visibility="visible" AcceptsReturn="True" VerticalScrollBarVisibility="Visible"/>
 
         <Label Content="Do not forget to back up your password file" HorizontalAlignment="Left" Margin="29,10,0,0" VerticalAlignment="Top" FontFamily="{StaticResource UniversalFont}" FontSize="12" Height="27" Foreground="#FFFE0000"/>
 
 
-        <Button x:Name="ConfirmBtn" Content="Confirm" HorizontalAlignment="Left" Height="31" Margin="222,410,0,0" VerticalAlignment="Top" Width="162" Click="ConfirmBtn_Click" FontFamily="{StaticResource UniversalFont}" Background="White" BorderBrush="{x:Null}"/>
-        <Button x:Name="returnBtn" Content="Return" HorizontalAlignment="Left" Margin="673,10,0,0" VerticalAlignment="Top" Width="117" Click="returnBtn_Click" Background="{x:Null}" BorderBrush="{x:Null}" Height="31" FontFamily="{StaticResource UniversalFont}"/>
-        <Button Content="Check If Exists" HorizontalAlignment="Left" Height="28" Margin="495,78,0,0" VerticalAlignment="Top" Width="109" Click="Check_If_Exists_Click" FontFamily="{StaticResource UniversalFont}" Background="White" BorderBrush="{x:Null}"/>
+        <Button x:Name="ConfirmBtn" Content="Confirm" Style ="{StaticResource ReturnButton}" Margin="222,410,0,0" Width="162" Click="ConfirmBtn_Click"  Background="{StaticResource PositiveButtonBrush}"/>
+        <Button x:Name="returnBtn" Content="Return" Style="{StaticResource ReturnButton}" Click="returnBtn_Click"/>
+        <Button Content="Check If Exists" Style ="{StaticResource ReturnButton}" Margin="495,78,0,0" Click="Check_If_Exists_Click" Background="{StaticResource PositiveButtonBrush}"/>
     </Grid>
 </Page>

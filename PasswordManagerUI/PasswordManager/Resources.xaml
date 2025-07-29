@@ -22,5 +22,47 @@
     
     <FontFamily x:Key="UniversalFont">Segoe UI Semibold</FontFamily>
 
+    <Style x:Key="TextBoxTheme" TargetType="TextBox">
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Height" Value="37"/>
+        <Setter Property="Width" Value="240"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="BorderBrush" Value="{StaticResource HomeScreenBlueBrush}"/>
+        <Setter Property="BorderThickness" Value="2"/>
+        <Setter Property="FontFamily" Value="{StaticResource UniversalFont}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+
+    <Style x:Key="ReturnButton" TargetType="Button">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Margin" Value="675,10,0,0"/>
+        <Setter Property="Width" Value="117"/>
+        <Setter Property="Height" Value="31"/>
+        <Setter Property="Background" Value="{StaticResource NeurtralButtonBrush}"/>
+        <Setter Property="BorderBrush" Value="{x:Null}"/>
+        <Setter Property="FontFamily" Value="{StaticResource UniversalFont}"/>
+        <Setter Property="Foreground" Value="Black"/>
+    </Style>
+
+    <Style x:Key="PageTheme" TargetType="Page">
+        <Setter Property="Height" Value="525"/>
+        <Setter Property="Width" Value="810"/>
+    </Style>
+
+    <Style x:Key="ScrollViewerTheme" TargetType="ScrollViewer">
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="Height" Value="145"/>
+        <Setter Property="Width" Value="240"/>
+        <Setter Property="Margin" Value="553,333,0,0"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+    </Style>
+
 
 </ResourceDictionary>
