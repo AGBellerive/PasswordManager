@@ -30,8 +30,6 @@ namespace PasswordManager
             UpdateBtn.Visibility = Visibility.Hidden;
             NewPassword.Visibility = Visibility.Hidden;
             newPasswordLbl.Visibility = Visibility.Hidden;
-            AccountListBox.ItemsSource = FileManager.allAccounts;
-            DisplayAllAccounts();
         }
 
         private void ConfirmBtn_Click(object sender, RoutedEventArgs e)
@@ -67,12 +65,6 @@ namespace PasswordManager
             nav.GoToDisplayPassword();
         }
 
-        private void DisplayAllAccounts()
-        {
-            LOG.Info("Displaying all accounts");
-            AccountListScroller.Visibility = Visibility.Visible;
-        }
-
         private void PopulateLabels(Account foundAccount)
         {
             AccountName.Text = foundAccount.Site;
@@ -86,9 +78,9 @@ namespace PasswordManager
 
         }
 
-        private void AccountTextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void AccountOnClick(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBlock tb && tb.DataContext is Account clickedAccount)
+            if (e.OriginalSource is TextBlock tb && tb.DataContext is Account clickedAccount)
             {
                 Account foundAccount = manager.searchAccount(clickedAccount.Site);
                 PopulateLabels(foundAccount);

@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:PasswordManager"
+      xmlns:local="clr-namespace:PasswordManager" xmlns:components="clr-namespace:PasswordManager.Components"
       mc:Ignorable="d" 
       Style="{StaticResource PageTheme}"
       Title="DeleteAccount">
@@ -32,15 +32,8 @@
         <Label Content="Password" HorizontalAlignment="Left" Height="33" Margin="29,327,0,0" VerticalAlignment="Top" Width="90" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
         <Label  x:Name="otherLbl" Content="Additional information" HorizontalAlignment="Left" Height="28" Margin="29,380,0,0" VerticalAlignment="Top" Width="209" FontFamily="{StaticResource UniversalFont}" Visibility="Visible" FontSize="16" />
 
-        <ScrollViewer x:Name="AccountListScroller" Style="{StaticResource ScrollViewerTheme}" Visibility="Visible">
-            <ListBox x:Name="AccountListBox" BorderThickness="0" Background="Transparent">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text ="{Binding Site}" Padding="2px" Cursor="Hand" Foreground="White" TextDecorations="Underline" MouseLeftButtonDown="AccountTextBlock_MouseLeftButtonDown" FontWeight="Bold" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
+        <components:AccountList x:Name="MyAccountList" AccountClick="AccountOnClick"/>
+        
         <Button x:Name="returnBtn" Content="Return" Style="{StaticResource ReturnButton}" Click="returnBtn_Click"/>
         <Button x:Name="deleteBtn" Content="Delete" Style="{StaticResource ReturnButton}" Margin="388,141,0,0" Click="Delete_Button_Click" Background="{StaticResource NegativeButtonBrush}" Foreground="White"/>
     </Grid>

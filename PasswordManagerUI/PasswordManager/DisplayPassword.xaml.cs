@@ -25,21 +25,21 @@ namespace PasswordManager
         public DisplayPassword()
         {
             InitializeComponent();
+
             LOG.Info("Display password initilized");
 
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
 
             //manager.readJson();
-            SearchedAccountName.Focus();
-            AccountListScroller.Visibility = Visibility.Hidden;
             otherLbl.Visibility = Visibility.Hidden;
             Other.Visibility = Visibility.Hidden;
             CopyBtn.Visibility = Visibility.Hidden;
             LastLogin.Content = "Last Log In: " + manager.getLastLogIn();
             manager.updateLastLogin();
-            AccountListBox.ItemsSource = FileManager.allAccounts; // Loads the accounts to the list
+            Loaded += (sender, e) => SearchBox.FocusInput();
         }
+
 
         /**
          * Whenever the user types in the testbox field, it is checked if the user
@@ -49,40 +49,27 @@ namespace PasswordManager
          * text that is searched. If it is multiple accounts, that is then deletated to
          * another class
          */
-        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        private void OnKeyDownHandler(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Return)
-            {
-                if (SearchedAccountName.Text.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0); 
-                Account foundAccount = manager.searchAccount(SearchedAccountName.Text);
+            string SearchedAccountNameText = ((TextBox)e.OriginalSource).Text;
+            //Instead of directly refering to the "SearchAccountName" textbox, this casting allows us to refrence that block
 
-                if (foundAccount.Site.Equals("MULTI-FIND"))
+            if (SearchedAccountNameText.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0); 
+                Account foundAccount = manager.searchAccount(SearchedAccountNameText);
+
+            if (foundAccount.Site.Equals("MULTI-FIND"))
                 {
-                    MultipleAccountDisplay mad = new MultipleAccountDisplay();
-                    LOG.Info("Changing to Multiple Account Display");
-                    mad.load(SearchedAccountName.Text);
+                MultipleAccountDisplay mad = new MultipleAccountDisplay();
+                LOG.Info("Changing to Multiple Account Display");
+                mad.load(SearchedAccountNameText);
                     
                     Application.Current.MainWindow.Content = mad;
-                }
-
-                else if (foundAccount != null)
-                {
-                    PopulateLabels(foundAccount);
-                }
             }
-        }
 
-        private void DisplayAllAccounts(object sender, RoutedEventArgs e)
-        {
-            LOG.Info("All accounts displaying");
-            AccountListScroller.Visibility = Visibility.Visible;
-           
-
-            //After initial setup, the application crashes becaseu all accounts is null, this fixes
-            if (FileManager.allAccounts == null) return;
-
-           
-            dropDown.IsExpanded = false;
+            else if (foundAccount != null)
+            {
+                PopulateLabels(foundAccount);
+            }
         }
 
         private void Add_Account_Click(object sender, RoutedEventArgs e)
@@ -158,9 +145,9 @@ namespace PasswordManager
             }
         }
 
-        private void AccountTextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void AccountOnClick(object sender, RoutedEventArgs e)
         {
-            if(sender is TextBlock tb && tb.DataContext is Account clickedAccount)
+            if(e.OriginalSource is TextBlock tb && tb.DataContext is Account clickedAccount)
             {
                 Account foundAccount = manager.specificSearch(clickedAccount.Site);
                 PopulateLabels(foundAccount);
