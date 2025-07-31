@@ -27,9 +27,12 @@ namespace PasswordManager
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
 
-            SearchedAccountName.Focus();
             deleteBtn.Visibility = Visibility.Hidden;
+            otherLbl.Visibility = Visibility.Hidden;
+
             DisplayAllAccounts();
+
+            Loaded += (sender, e) => SearchBox.FocusInput(); // This allows the searchbox to pull focus when the page is launched
         }
 
         private void DisplayAllAccounts()
@@ -42,20 +45,16 @@ namespace PasswordManager
             nav.GoToDisplayPassword();
         }
 
-        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        private void SearchHandler(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Return)
+            string SearchedAccountNameText = ((TextBox)e.OriginalSource).Text;
+            if (SearchedAccountNameText.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0);
+
+            accountToBeDeleted = manager.specificSearch(SearchedAccountNameText);
+
+            if (accountToBeDeleted != null)
             {
-                if (SearchedAccountName.Text.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0);
-                accountToBeDeleted = manager.specificSearch(SearchedAccountName.Text);
-
-                if (accountToBeDeleted != null)
-                {
-
-                    PopulateLabels(accountToBeDeleted);
-
-                    
-                }
+                PopulateLabels(accountToBeDeleted);
             }
         }
 
@@ -90,12 +89,10 @@ namespace PasswordManager
 
         private void AccountOnClick(object sender, RoutedEventArgs e)
         {
-            if (e.OriginalSource is TextBlock tb && tb.DataContext is Account clickedAccount)
-            {
-                Account foundAccount = manager.searchAccount(clickedAccount.Site);
-                PopulateLabels(foundAccount);
-
-            }
+            Utils utils = new Utils();
+            Account clickedAccount = utils.AccountOnClick(sender, e);
+            PopulateLabels(clickedAccount);
+            SearchBox.SearchedAccountName.Text = clickedAccount.Site;
         }
     }
 }

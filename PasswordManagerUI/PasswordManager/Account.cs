@@ -21,11 +21,11 @@ namespace PasswordManager
 
         public Account(string site, string username, string email, string password, string other)
         {
-            this.Site = site;
-            this.Username = username;
-            this.Email = email;
-            this.Password = password;
-            this.Other = other;
+            this.Site = site.Trim();
+            this.Username = username.Trim();
+            this.Email = email.Trim();
+            this.Password = password.Trim();
+            this.Other = other.Trim();
         }
         public Account()
         {
@@ -51,6 +51,17 @@ namespace PasswordManager
                 }
             }
             return false;
+        }
+
+        public override int GetHashCode()
+        {
+            int hashCode = 1377198435;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Site);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Username);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Email);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Password);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Other);
+            return hashCode;
         }
     }
 }

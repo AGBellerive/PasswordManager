@@ -26,10 +26,12 @@ namespace PasswordManager
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
 
-            SearchedAccountName.Focus();
+            
             UpdateBtn.Visibility = Visibility.Hidden;
             NewPassword.Visibility = Visibility.Hidden;
             newPasswordLbl.Visibility = Visibility.Hidden;
+
+            Loaded += (sender, e) => SearchBox.FocusInput(); // This allows the searchbox to pull focus when the page is launched
         }
 
         private void ConfirmBtn_Click(object sender, RoutedEventArgs e)
@@ -39,23 +41,20 @@ namespace PasswordManager
             nav.GoToDisplayPassword();
         }
 
-        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        private void SearchHandler(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Return)
+            string SearchedAccountNameText = ((TextBox)e.OriginalSource).Text;
+            foundAccount = manager.specificSearch(SearchedAccountNameText);
+            if (foundAccount != null)
             {
-                foundAccount = manager.specificSearch(SearchedAccountName.Text);
+                AccountName.Text = foundAccount.Site;
+                UserName.Text = foundAccount.Username;
+                Email.Text = foundAccount.Email;
+                Password.Text = foundAccount.Password;
 
-                if (foundAccount != null)
-                {
-                    AccountName.Text = foundAccount.Site;
-                    UserName.Text = foundAccount.Username;
-                    Email.Text = foundAccount.Email;
-                    Password.Text = foundAccount.Password;
-
-                    NewPassword.Visibility = Visibility.Visible;
-                    UpdateBtn.Visibility = Visibility.Visible;
-                    newPasswordLbl.Visibility = Visibility.Visible;
-                }
+                NewPassword.Visibility = Visibility.Visible;
+                UpdateBtn.Visibility = Visibility.Visible;
+                newPasswordLbl.Visibility = Visibility.Visible;
             }
         }
 
@@ -80,12 +79,10 @@ namespace PasswordManager
 
         private void AccountOnClick(object sender, RoutedEventArgs e)
         {
-            if (e.OriginalSource is TextBlock tb && tb.DataContext is Account clickedAccount)
-            {
-                Account foundAccount = manager.searchAccount(clickedAccount.Site);
-                PopulateLabels(foundAccount);
-
-            }
+            Utils utils = new Utils();
+            Account clickedAccount = utils.AccountOnClick(sender, e);
+            PopulateLabels(clickedAccount);
+            SearchBox.SearchedAccountName.Text = clickedAccount.Site;
         }
     }
 }

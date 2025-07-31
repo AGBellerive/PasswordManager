@@ -3,15 +3,14 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:PasswordManager"
+      xmlns:local="clr-namespace:PasswordManager" xmlns:components="clr-namespace:PasswordManager.Components"
       mc:Ignorable="d" 
       Style="{StaticResource PageTheme}"
       Title="MultipleAccountDisplay">
 
     <Grid Background="{StaticResource SecondaryColorBrush}">
-        <Label Content="Enter the account you're looking for" HorizontalAlignment="Left"  Margin="553,145,0,0" VerticalAlignment="Top" FontFamily="{StaticResource UniversalFont}" FontSize="10" Padding="0" Foreground="White"/>
-        <TextBox x:Name="SearchedAccountName" HorizontalAlignment="Left" Height="37" Margin="553,163,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="237" BorderBrush="#FF64B4DD" KeyDown="OnKeyDownHandler" BorderThickness="2" FontSize="18" FontWeight="Bold" Padding="5" FontFamily="{StaticResource UniversalFont}" Background="{x:Null}" Foreground="White"/>
-
+        <components:SearchBox x:Name="SearchBox" Label="Specify the account you're looking for" AccountSearch="SearchHandler"/>
+        
         <TextBlock x:Name="HelpBx" HorizontalAlignment="Left" TextWrapping="Wrap"  VerticalAlignment="Top" Height="500" Width="548" FontSize="8" TextAlignment="Center" Margin="0,0,0,0">
             <TextBlock.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -31,19 +30,12 @@
         <Label Content="Email" HorizontalAlignment="Left" Height="29" Margin="29,267,0,0" VerticalAlignment="Top" Width="89" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
         <Label Content="Password" HorizontalAlignment="Left" Height="33" Margin="29,326,0,0" VerticalAlignment="Top" Width="89" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
         <Label  x:Name="otherLbl" Content="Additional information" HorizontalAlignment="Left" Height="28" Margin="29,380,0,0" VerticalAlignment="Top" Width="209" FontFamily="{StaticResource UniversalFont}" Visibility="Visible" FontSize="16" />
-
-        <ScrollViewer x:Name="AccountListScroller" Style="{StaticResource ScrollViewerTheme}" Visibility="Visible">
-            <ListBox x:Name="AccountListBox" BorderThickness="0" Background="Transparent">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text ="{Binding Site}" Padding="2px" Cursor="Hand" Foreground="White" TextDecorations="Underline" MouseLeftButtonDown="AccountTextBlock_MouseLeftButtonDown" FontWeight="Bold" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-        </ScrollViewer>
         
+        <components:AccountList x:Name="MyAccountList" AccountClick="AccountOnClick"/>
+
         <Label Content="Multiple Accounts Were Found.&#xD;&#xA;Search One of the accounts below." HorizontalAlignment="Left" Height="36" Margin="548,264,0,0" VerticalAlignment="Top" Width="237" FontFamily="{StaticResource UniversalFont}" FontSize="10" Foreground="White"/>
         <Button x:Name="returnBtn" Content="Return" HorizontalAlignment="Left" Margin="673,10,0,0" VerticalAlignment="Top" Width="117" Click="returnBtn_Click" Background="{StaticResource NeurtralButtonBrush}" BorderBrush="{x:Null}" Height="31" FontFamily="{StaticResource UniversalFont}"/>
-        <Button x:Name="CopyBtn" Content="Copy" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="66" Margin="410,325,0,0" Click="CopyBtn_Click"/>
+        <Button x:Name="CopyBtn" Content="Copy" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="150" Margin="390,327,0,0" Click="CopyBtn_Click" FontFamily="{StaticResource UniversalFont}" Background="{StaticResource NeurtralButtonBrush}" BorderBrush="{x:Null}" Cursor="Hand" />
+
     </Grid>
 </Page>

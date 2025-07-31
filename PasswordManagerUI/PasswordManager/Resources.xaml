@@ -39,6 +39,19 @@
         <Setter Property="TextWrapping" Value="Wrap"/>
     </Style>
 
+    <Style x:Key="ComboBoxTheme" TargetType="ComboBox">
+        <Setter Property="Background" Value="{x:Null}"/>
+        <Setter Property="Foreground" Value="Black"/>
+        <Setter Property="Padding" Value="5"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+        <Setter Property="VerticalAlignment" Value="Top"/>
+        <Setter Property="Height" Value="37"/>
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="Bold"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FontFamily" Value="{StaticResource UniversalFont}"/>
+    </Style>
+
     <Style x:Key="ReturnButton" TargetType="Button">
         <Setter Property="HorizontalAlignment" Value="Left"/>
         <Setter Property="VerticalAlignment" Value="Top"/>

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -37,7 +39,8 @@ namespace PasswordManager
             CopyBtn.Visibility = Visibility.Hidden;
             LastLogin.Content = "Last Log In: " + manager.getLastLogIn();
             manager.updateLastLogin();
-            Loaded += (sender, e) => SearchBox.FocusInput();
+
+            Loaded += (sender, e) => SearchBox.FocusInput(); // This allows the searchbox to pull focus when the page is launched
         }
 
 
@@ -49,13 +52,14 @@ namespace PasswordManager
          * text that is searched. If it is multiple accounts, that is then deletated to
          * another class
          */
-        private void OnKeyDownHandler(object sender, RoutedEventArgs e)
+        private void SearchHandler(object sender, RoutedEventArgs e)
         {
             string SearchedAccountNameText = ((TextBox)e.OriginalSource).Text;
             //Instead of directly refering to the "SearchAccountName" textbox, this casting allows us to refrence that block
 
             if (SearchedAccountNameText.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0); 
-                Account foundAccount = manager.searchAccount(SearchedAccountNameText);
+               
+            Account foundAccount = manager.searchAccount(SearchedAccountNameText);
 
             if (foundAccount.Site.Equals("MULTI-FIND"))
                 {
@@ -99,23 +103,9 @@ namespace PasswordManager
         public void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
             LOG.Info("Copying credentials");
-            if (UserName.Text.ToString().Length != 0 && Email.Text.ToString().Length != 0)
-            {
-                Clipboard.SetText(UserName.Text.ToString());
-                System.Threading.Thread.Sleep(150);
-                Clipboard.SetText(Email.Text.ToString());
-            }
-            else if(UserName.Text.ToString().Length == 0)
-            {
-                Clipboard.SetText(Email.Text.ToString());
-            }
-            else
-            {
-                Clipboard.SetText(UserName.Text.ToString());
-            }
-            System.Threading.Thread.Sleep(150);
-            Clipboard.SetText(Password.Text.ToString());
-            MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
+            Utils utils = new Utils();
+            utils.CopyOnClick(UserName.Text, Email.Text, Password.Text);
+
             CopyBtn.Background = (Brush)Application.Current.Resources["PositiveButtonBrush"];
         }
 
@@ -145,14 +135,12 @@ namespace PasswordManager
             }
         }
 
-        private void AccountOnClick(object sender, RoutedEventArgs e)
+        public void AccountOnClick(object sender, RoutedEventArgs e)
         {
-            if(e.OriginalSource is TextBlock tb && tb.DataContext is Account clickedAccount)
-            {
-                Account foundAccount = manager.specificSearch(clickedAccount.Site);
-                PopulateLabels(foundAccount);
-
-            }
+            Utils utils = new Utils();
+            Account clickedAccount = utils.AccountOnClick(sender, e);
+            PopulateLabels(clickedAccount);
+            SearchBox.SearchedAccountName.Text = clickedAccount.Site;
         }
     }
 }

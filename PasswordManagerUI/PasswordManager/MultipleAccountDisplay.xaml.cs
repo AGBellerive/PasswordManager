@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using log4net;
 
 namespace PasswordManager
@@ -24,44 +25,27 @@ namespace PasswordManager
         {
             InitializeComponent();
             LOG.Info("Multiple account initilized");
-            SearchedAccountName.Focus();
             if (manager == null) manager = new FileManager();
 
             otherLbl.Visibility = Visibility.Hidden;
             Other.Visibility = Visibility.Hidden;
             CopyBtn.Visibility = Visibility.Hidden;
-            AccountListBox.ItemsSource = FileManager.multiAccountFind;
+            MyAccountList.AccountListBox.ItemsSource = FileManager.multiAccountFind;
 
+            Loaded += (sender, e) => SearchBox.FocusInput();
         }
-        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        private void SearchHandler(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Return)
-            {
-                Account account = manager.searchMultipleAccounts(SearchedAccountName.Text);
 
-                AccountName.Text = account.Site;
-                UserName.Text = account.Username;
-                Email.Text = account.Email;
-                Password.Text = account.Password;
+            string SearchedAccountNameText = ((TextBox)e.OriginalSource).Text;
 
-                if (account.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
+            if (SearchedAccountNameText.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0);
 
-                else CopyBtn.Visibility = Visibility.Visible;
+            Account account = manager.searchMultipleAccounts(SearchedAccountNameText);
 
-                if (account.Other.Length > 0)
-                {
-                    otherLbl.Visibility = Visibility.Visible;
-                    Other.Visibility = Visibility.Visible;
-
-                    Other.Text = account.Other;
-                }
-                else
-                {
-                    otherLbl.Visibility = Visibility.Hidden;
-                    Other.Visibility = Visibility.Hidden;
-                }
-            }
+            PopulateLabels(account);
         }
+
 
         public void load(String searchTerm)
         {
@@ -76,9 +60,11 @@ namespace PasswordManager
 
         private void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
-            //This is so that the main display password copy function is shared and no code duplication
-            DisplayPassword dp = new DisplayPassword();
-            dp.CopyBtn_Click(sender, e);
+            LOG.Info("Copying credentials");
+            Utils utils = new Utils();
+            utils.CopyOnClick(UserName.Text, Email.Text, Password.Text);
+
+            CopyBtn.Background = (Brush)Application.Current.Resources["PositiveButtonBrush"];
         }
 
         private void PopulateLabels(Account foundAccount)
@@ -107,14 +93,12 @@ namespace PasswordManager
             }
         }
 
-        private void AccountTextBlock_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void AccountOnClick(object sender, RoutedEventArgs e)
         {
-            if (sender is TextBlock tb && tb.DataContext is Account clickedAccount)
-            {
-                Account foundAccount = manager.searchAccount(clickedAccount.Site);
-                PopulateLabels(foundAccount);
-
-            }
+            Utils utils = new Utils();
+            Account clickedAccount = utils.AccountOnClick(sender, e); 
+            PopulateLabels(clickedAccount);
+            SearchBox.SearchedAccountName.Text = clickedAccount.Site;
         }
     }
 }

@@ -9,10 +9,9 @@
       Title="DeleteAccount">
 
     <Grid Background="{StaticResource SecondaryColorBrush}">
-        <Label Content="Enter the account you want to delete" HorizontalAlignment="Left"  Margin="553,145,0,0" VerticalAlignment="Top" FontFamily="{StaticResource UniversalFont}" FontSize="10" Padding="0" Foreground="White"/>
-
-        <TextBox x:Name="SearchedAccountName" Style="{StaticResource TextBoxTheme}" Margin="553,163,0,0" KeyDown="OnKeyDownHandler"/>
-        <TextBlock x:Name="HelpBx" HorizontalAlignment="Left" TextWrapping="Wrap"  VerticalAlignment="Top" Height="500" Width="548" FontSize="8" TextAlignment="Center" Margin="0,0,0,0">
+        <components:SearchBox x:Name="SearchBox" Label="Enter the account you want to delete" AccountSearch="SearchHandler"/>
+        
+        <TextBlock x:Name="HelpBx" HorizontalAlignment="Left" TextWrapping="Wrap"  VerticalAlignment="Top" Height="550" Width="548" FontSize="8" TextAlignment="Center" Margin="0,0,0,0">
             <TextBlock.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="{StaticResource PrimaryBlue}" />
