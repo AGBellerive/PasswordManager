@@ -45,7 +45,7 @@ namespace PasswordManager
 
             MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
         }
-        
+
 
     }
 }

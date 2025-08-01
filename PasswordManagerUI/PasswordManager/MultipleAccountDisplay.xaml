@@ -20,9 +20,9 @@
         </TextBlock>
 
         <TextBlock x:Name="AccountName" HorizontalAlignment="Left" Height="33" Margin="150,141,0,0" VerticalAlignment="Top" Width="213" FontSize="16"/>
-        <TextBlock x:Name="UserName"  HorizontalAlignment="Left" Height="33" Margin="150,198,0,0" VerticalAlignment="Top" Width="213" FontSize="16"/>
-        <TextBlock x:Name="Email"  HorizontalAlignment="Left" Height="33" Margin="150,259,0,0" VerticalAlignment="Top" Width="213" FontSize="16"/>
-        <TextBlock x:Name="Password"  HorizontalAlignment="Left" Height="33" Margin="150,315,0,0" VerticalAlignment="Top" Width="213" FontSize="16"/>
+        <TextBlock x:Name="UserName"  HorizontalAlignment="Left" Height="33" Margin="150,202,0,0" VerticalAlignment="Top" Width="213" FontSize="16"/>
+        <TextBlock x:Name="Email"  HorizontalAlignment="Left" Height="33" Margin="150,267,0,0" VerticalAlignment="Top" Width="213" FontSize="16"/>
+        <TextBlock x:Name="Password"  HorizontalAlignment="Left" Height="33" Margin="150,326,0,0" VerticalAlignment="Top" Width="213" FontSize="16"/>
         <TextBlock x:Name="Other"  HorizontalAlignment="Left" Height="125" Margin="238,360,0,0" VerticalAlignment="Top" Width="310" Visibility="Visible"/>
 
         <Label Content="Account" HorizontalAlignment="Left" Height="33" Margin="29,141,0,0" VerticalAlignment="Top" Width="89" FontFamily="{StaticResource UniversalFont}" FontSize="16"/>

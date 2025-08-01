@@ -74,7 +74,7 @@ namespace PasswordManager
             NewPassword.Visibility = Visibility.Visible;
             UpdateBtn.Visibility = Visibility.Visible;
             newPasswordLbl.Visibility = Visibility.Visible;
-
+            NewPassword.Focus();
         }
 
         private void AccountOnClick(object sender, RoutedEventArgs e)
