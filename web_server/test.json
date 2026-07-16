@@ -1,0 +1,16 @@
+[
+    {
+        "Site": "Example Site",
+        "Username": "Example Username",
+        "Email": "Email@Email.com",
+        "Password": "ABC123",
+        "Others": "Extra information "
+    },
+    {
+        "Site": "Github",
+        "Username": "octocat",
+        "Email": "Email@Email.com",
+        "Password": "pa55w0rd",
+        "Others": "anthropomorphized 'octocat' with five octopus-like arms"
+    }
+]

@@ -1,0 +1,7 @@
+{
+    "PASSWORD_PATH": "./test.json",
+    "PORT": 5000,
+    "ALLOWED_IP": [
+        "127.0.0.1"
+    ]
+}
