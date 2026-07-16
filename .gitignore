@@ -193,3 +193,6 @@ obj
 
 PasswordManagerUI/PasswordManagerInstaller/
 PasswordManagerUI/.vs/
+
+# Ignore local file with explicit titles
+*NotCommited*

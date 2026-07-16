@@ -12,5 +12,12 @@
         "Email": "Email@Email.com",
         "Password": "pa55w0rd",
         "Others": "anthropomorphized 'octocat' with five octopus-like arms"
+    },
+    {
+        "Site": "Postman",
+        "Username": "Tester",
+        "Email": "test@Email.com",
+        "Password": "test123456",
+        "Others": "did it work"
     }
 ]

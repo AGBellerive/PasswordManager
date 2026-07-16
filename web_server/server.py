@@ -9,8 +9,12 @@ app = Flask(__name__)
 file_lock = Lock()
 
 # Loading config file
-with open('config.json', 'r', encoding='utf-8') as f:
+# with open('config.json', 'r', encoding='utf-8') as f:
+#     config_file = json.load(f)
+
+with open('C:/Users/kokaw/Desktop/Projects/PasswordManager/web_server/config.json', 'r', encoding='utf-8') as f:
     config_file = json.load(f)
+
 
 PASSWORD_FILE = config_file["PASSWORD_PATH"]
 PORT = config_file["PORT"]
