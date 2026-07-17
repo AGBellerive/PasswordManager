@@ -8,14 +8,20 @@ app = Flask(__name__)
 
 file_lock = Lock()
 
-# Loading config file
-with open('config.json', 'r', encoding='utf-8') as f:
+# Loading config file relative to the server.py location
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+CONFIG_PATH = os.path.join(BASE_DIR, 'config.json')
+
+with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_file = json.load(f)
 
-
 PASSWORD_FILE = config_file["PASSWORD_PATH"]
+# If the password path is relative, resolve it relative to web_server/ folder
+if not os.path.isabs(PASSWORD_FILE):
+    PASSWORD_FILE = os.path.abspath(os.path.join(BASE_DIR, PASSWORD_FILE))
+
 PORT = config_file["PORT"]
-ALLOWED_IPS= config_file["ALLOWED_IP"]
+ALLOWED_IPS = config_file["ALLOWED_IP"]
 
 #global variable
 ACCOUNTS = {}
