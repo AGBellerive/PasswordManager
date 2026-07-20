@@ -22,6 +22,7 @@ if not os.path.isabs(PASSWORD_FILE):
 
 PORT = config_file["PORT"]
 ALLOWED_IPS = config_file["ALLOWED_IP"]
+HOST = config_file["SERVER_HOST"]
 
 #global variable
 ACCOUNTS = {}
@@ -151,7 +152,7 @@ def delete():
     return jsonify({"error": "Account not found!"}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True, port=PORT)
+    app.run(debug=True, port=PORT, host=HOST)
 
 # # 1. Activate the virtual environment
 # source ../.venv/Scripts/activate
