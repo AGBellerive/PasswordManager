@@ -197,4 +197,9 @@ PasswordManagerUI/.vs/
 # Ignore local file with explicit titles
 *NotCommited*
 
-__pycache__/
+.pytest_cache/
+.__pycache__/
+web_server/__pycache__/
+web_server/tests/__pycache__/
+web_server/tests/*.pyc
+.venv/

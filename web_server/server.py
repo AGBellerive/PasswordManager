@@ -10,7 +10,7 @@ file_lock = Lock()
 
 # Loading config file relative to the server.py location
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CONFIG_PATH = os.path.join(BASE_DIR, 'config.json')
+CONFIG_PATH = os.path.join(BASE_DIR, 'configNotCommited.json')
 
 with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
     config_file = json.load(f)
@@ -108,7 +108,6 @@ def create():
     writeToJSON()
 
     return jsonify({"message": "Account created successfully!"})
-
 
 @app.route('/readAccounts', methods=['GET'])
 def read():
