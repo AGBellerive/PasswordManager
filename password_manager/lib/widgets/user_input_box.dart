@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../constants/app_colors.dart';
 
 class UserInputBox extends StatefulWidget {
   const UserInputBox({
@@ -37,7 +38,7 @@ class _UserInputBoxState extends State<UserInputBox> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(cornerRadius),
-          borderSide: BorderSide(color: Colors.lightBlue, width: 2.0),
+          borderSide: BorderSide(color: AppColors.blueAccent, width: 2.0),
         ),
         filled: true,
         fillColor: Colors.white,
@@ -59,7 +60,7 @@ class _UserInputBoxState extends State<UserInputBox> {
                   isPasswordVisible
                       ? Icons.visibility
                       : Icons.visibility_off_outlined,
-                  color: Colors.lightBlueAccent,
+                  color: AppColors.blueAccent,
                 ),
               )
             : null,

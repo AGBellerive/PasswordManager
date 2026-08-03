@@ -3,6 +3,9 @@ import '../widgets/user_input_box.dart';
 import '../widgets/pop_up_snack_bar.dart';
 import '../utils/sharedpref.dart';
 import './setup.dart';
+import './constants/app_colors.dart';
+import './vault.dart';
+
 
 void main() {
   runApp(const MyApp());
@@ -50,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
 
-    SharedPreferencesUtil.containsKey('masterHash').then((value) {
+    SharedPreferencesUtil.containsKey('masterPassword').then((value) {
       if (value) {
         _passwordController.text = "";
       }
@@ -66,12 +69,25 @@ class _MyHomePageState extends State<MyHomePage> {
     PopUpSnackBar.show(context, 'Password Hint:\nInfo pressed');
   }
 
+  void _clearSharedPrefs(){
+    SharedPreferencesUtil.clear();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SetupPage()));
+  }
+
   void _unlockPressed(){
     //read shared prefrence for the masterHash
     //compare the _passwordController.text with the masterHash
     //if match, navigate to home page
     //if not match, show error message
-    PopUpSnackBar.show(context, 'Unlock pressed' + _passwordController.text);
+    SharedPreferencesUtil.get('masterPassword').then((masterHash) {
+      if (masterHash != null && _passwordController.text == masterHash) {
+        PopUpSnackBar.show(context, 'Unlock pressed' + _passwordController.text);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Vault()));
+      }else{
+        PopUpSnackBar.showError(context, 'Incorrect password');
+      }
+    });
+    
   }
 
   @override
@@ -84,13 +100,14 @@ class _MyHomePageState extends State<MyHomePage> {
     // than having to individually change instances of widgets.
 
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: Center(
         child: Column(
           // Invoke "debug painting" -> press "p" in the console to see the  wireframe for each widget.
           mainAxisAlignment: .center,
           children: [
-            const Text('Vault Locked'),
-            const Text('Enter your master password to unlock'),
+            Text('Vault Locked', style: AppColors.textTheme.copyWith(fontSize: 24)),
+            Text('Enter your master password to unlock', style: AppColors.textTheme.copyWith(fontSize: 24)),
             SizedBox(height: 16),
             SizedBox(
               width: 300,
@@ -117,6 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _infoPressed,
         tooltip: 'Info',
         child: const Icon(Icons.info_outline),
+        backgroundColor: AppColors.blueAccent
       ),
     );
   }
