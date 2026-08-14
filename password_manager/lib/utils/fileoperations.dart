@@ -18,15 +18,24 @@ class FileOperations {
     } catch (e) {
       print('Error reading or parsing file: $e');
     }
-    if (accounts.isEmpty){
-      accounts.add(Account.fromJson(
-        {'Site': 'example', 'Username': 'user', 'Email': 'user@example.com', 'Password': 'password', 'Others': 'info'}
-      ));
+    if (accounts.isEmpty) {
+      accounts.add(
+        Account.fromJson({
+          'Site': 'example',
+          'Username': 'user',
+          'Email': 'user@example.com',
+          'Password': 'password',
+          'Others': 'info',
+        }),
+      );
     }
     return accounts;
   }
 
-  static Future<bool> writeAccountFile(String path, List<Account> accounts) async {
+  static Future<bool> writeAccountFile(
+    String path,
+    List<Account> accounts,
+  ) async {
     try {
       final file = File(path);
       await file.writeAsString(jsonEncode(accounts));
@@ -36,5 +45,4 @@ class FileOperations {
       return false;
     }
   }
-
 }

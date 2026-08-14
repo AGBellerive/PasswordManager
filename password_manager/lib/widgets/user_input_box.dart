@@ -9,6 +9,7 @@ class UserInputBox extends StatefulWidget {
     required this.controller,
     this.icon,
     this.keyboardType,
+    this.onClick,
   });
 
   final String hintText;
@@ -16,7 +17,7 @@ class UserInputBox extends StatefulWidget {
   final TextEditingController controller;
   final IconData? icon;
   final TextInputType? keyboardType;
-
+  final VoidCallback? onClick;
 
   @override
   State<UserInputBox> createState() => _UserInputBoxState();
@@ -65,6 +66,11 @@ class _UserInputBoxState extends State<UserInputBox> {
               )
             : null,
       ),
+      //onTap: widget.onClick,
+      onFieldSubmitted: (value) {
+        // Handle the submission of the input value here
+        widget.onClick?.call();
+      },
     );
   }
 }

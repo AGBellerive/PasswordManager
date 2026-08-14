@@ -6,7 +6,6 @@ import './setup.dart';
 import './constants/app_colors.dart';
 import './vault.dart';
 
-
 void main() {
   runApp(const MyApp());
 }
@@ -19,9 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Password Manager',
-      theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.green),
-      ),
+      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.green)),
       home: const MyHomePage(title: 'Home Page'),
     );
   }
@@ -56,38 +53,46 @@ class _MyHomePageState extends State<MyHomePage> {
     SharedPreferencesUtil.containsKey('masterPassword').then((value) {
       if (value) {
         _passwordController.text = "";
-      }
-      else{
-        PopUpSnackBar.show(context, 'No master password set. Redirecting to setup...');
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SetupPage()));
+      } else {
+        PopUpSnackBar.show(
+          context,
+          'No master password set. Redirecting to setup...',
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => SetupPage()),
+        );
       }
     });
-
   }
 
   void _infoPressed() {
     PopUpSnackBar.show(context, 'Password Hint:\nInfo pressed');
   }
 
-  void _clearSharedPrefs(){
+  void _clearSharedPrefs() {
     SharedPreferencesUtil.clear();
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SetupPage()));
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SetupPage()),
+    );
   }
 
-  void _unlockPressed(){
+  void _unlockPressed() {
     //read shared prefrence for the masterHash
     //compare the _passwordController.text with the masterHash
     //if match, navigate to home page
     //if not match, show error message
     SharedPreferencesUtil.get('masterPassword').then((masterHash) {
       if (masterHash != null && _passwordController.text == masterHash) {
-        PopUpSnackBar.show(context, 'Unlock pressed' + _passwordController.text);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Vault()));
-      }else{
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Vault()),
+        );
+      } else {
         PopUpSnackBar.showError(context, 'Incorrect password');
       }
     });
-    
   }
 
   @override
@@ -106,8 +111,14 @@ class _MyHomePageState extends State<MyHomePage> {
           // Invoke "debug painting" -> press "p" in the console to see the  wireframe for each widget.
           mainAxisAlignment: .center,
           children: [
-            Text('Vault Locked', style: AppColors.textTheme.copyWith(fontSize: 24)),
-            Text('Enter your master password to unlock', style: AppColors.textTheme.copyWith(fontSize: 24)),
+            Text(
+              'Vault Locked',
+              style: AppColors.textTheme.copyWith(fontSize: 24),
+            ),
+            Text(
+              'Enter your master password to unlock',
+              style: AppColors.textTheme.copyWith(fontSize: 24),
+            ),
             SizedBox(height: 16),
             SizedBox(
               width: 300,
@@ -117,7 +128,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 isPassword: true,
                 icon: Icons.lock_outline,
                 keyboardType: TextInputType.text,
-              )
+                onClick: _unlockPressed,
+              ),
             ),
             SizedBox(height: 16),
             SizedBox(
@@ -134,7 +146,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: _infoPressed,
         tooltip: 'Info',
         child: const Icon(Icons.info_outline),
-        backgroundColor: AppColors.blueAccent
+        backgroundColor: AppColors.blueAccent,
       ),
     );
   }
