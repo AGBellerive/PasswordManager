@@ -5,8 +5,14 @@ import '../utils/sharedpref.dart';
 import './setup.dart';
 import './constants/app_colors.dart';
 import './vault.dart';
+import 'package:flutter/services.dart';
 
 void main() {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
   runApp(const MyApp());
 }
 
@@ -43,7 +49,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -85,7 +90,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //if not match, show error message
     SharedPreferencesUtil.get('masterPassword').then((masterHash) {
       if (masterHash != null && _passwordController.text == masterHash) {
-        Navigator.push(
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Vault()),
         );

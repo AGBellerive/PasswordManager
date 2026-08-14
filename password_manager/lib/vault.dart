@@ -1,3 +1,4 @@
+import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import './constants/app_colors.dart';
 import './widgets/user_input_box.dart';
@@ -14,24 +15,39 @@ class Vault extends StatefulWidget {
   State<Vault> createState() => _VaultState();
 }
 
-class _VaultState extends State<Vault> {
+class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
   final TextEditingController _searchController = TextEditingController();
 
   Future<List<Account>> initialFutureAccounts = Future.value([]);
   List<Account> _allAccounts = [];
   List<Account> _filteredAccounts = [];
 
+  late Animation<double> _animation;
+  late AnimationController _animationController;
+
   @override
   void initState() {
     super.initState();
     initialFutureAccounts = _loadAccounts();
     _searchController.addListener(_onSearchChanged);
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 260),
+    );
+
+    final curvedAnimation = CurvedAnimation(
+      curve: Curves.easeInOut,
+      parent: _animationController,
+    );
+    _animation = Tween<double>(begin: 0, end: 1).animate(curvedAnimation);
   }
 
   @override
   void dispose() {
     _searchController.removeListener(_onSearchChanged);
     _searchController.dispose();
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -68,34 +84,29 @@ class _VaultState extends State<Vault> {
       body: SafeArea(
         child: Column(
           children: [
-            Material(
-              elevation: 0,
-              color: AppColors.backgroundColor,
-              child: Padding(
-                padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'My Vault',
-                      style: AppColors.textTheme.copyWith(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                      ),
+            Padding(
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'My Vault',
+                    style: AppColors.textTheme.copyWith(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
                     ),
-                    SizedBox(height: 20),
-                    UserInputBox(
-                      hintText: 'Search Account',
-                      controller: _searchController,
-                      isPassword: false,
-                      icon: Icons.search,
-                      keyboardType: TextInputType.text,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 20),
+                  UserInputBox(
+                    hintText: 'Search Account',
+                    controller: _searchController,
+                    isPassword: false,
+                    icon: Icons.search,
+                    keyboardType: TextInputType.text,
+                  ),
+                ],
               ),
             ),
-
             Expanded(
               child: FutureBuilder<List<Account>>(
                 future: initialFutureAccounts,
@@ -122,13 +133,16 @@ class _VaultState extends State<Vault> {
 
                   return ClipRect(
                     child: ListView.builder(
-                      clipBehavior: Clip.hardEdge,
+                      clipBehavior: Clip.antiAlias,
                       itemCount: _filteredAccounts.length,
                       itemBuilder: (context, index) {
                         final account = _filteredAccounts[index];
-                        return Padding(
-                          padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                          child: AccountCard(account: account),
+                        return Material(
+                          color: AppColors.backgroundColor,
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                            child: AccountCard(account: account),
+                          ),
                         );
                       },
                     ),
@@ -139,9 +153,50 @@ class _VaultState extends State<Vault> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+
+      //Init Floating Action Bubble
+      floatingActionButton: FloatingActionBubble(
+        // Menu items
+        items: <Bubble>[
+          // Floating action menu item
+          Bubble(
+            title: "Settings",
+            iconColor: Colors.white,
+            bubbleColor: Colors.blue,
+            icon: Icons.settings,
+            titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+            onPress: () {
+              _animationController.reverse();
+            },
+          ),
+          // Floating action menu item
+          Bubble(
+            title: "Add",
+            iconColor: Colors.white,
+            bubbleColor: Colors.blue,
+            icon: Icons.add,
+            titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+            onPress: () {
+              _animationController.reverse();
+            },
+          ),
+        ],
+
+        // animation controller
+        animation: _animation,
+
+        // On pressed change animation state
+        onPress: () => _animationController.isCompleted
+            ? _animationController.reverse()
+            : _animationController.forward(),
+
+        // Floating Action button Icon color
+        iconColor: Colors.blue,
+
+        // Flaoting Action button Icon
+        iconData: Icons.menu,
+        backGroundColor: Colors.white,
       ),
     );
   }

@@ -25,7 +25,7 @@ class FileOperations {
           'Username': 'user',
           'Email': 'user@example.com',
           'Password': 'password',
-          'Others': 'info',
+          'Other': 'info',
         }),
       );
     }

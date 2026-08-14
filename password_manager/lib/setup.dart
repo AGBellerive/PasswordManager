@@ -58,13 +58,12 @@ class _SetupPageState extends State<SetupPage> {
         children: [
           ElevatedButton(
             onPressed: () async {
-              FilePickerResult? result = await FilePicker.pickFiles(
-                allowMultiple: false,
+              PlatformFile? pickedFile = await FilePicker.pickFile(
                 type: FileType.custom,
                 allowedExtensions: ['json']);
 
-              if (result != null) {
-                final file = File(result.files.single.path!);
+              if (pickedFile != null) {
+                final file = File(pickedFile.path!);
                 final accounts = await FileOperations.readAccountFile(file.path);
                 setState(() {
                   passwordFile = file;

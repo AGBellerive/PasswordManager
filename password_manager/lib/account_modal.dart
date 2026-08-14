@@ -18,11 +18,18 @@ class AccountModal extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 IconButton(
                   icon: const Icon(Icons.close, color: AppColors.textColor),
                   onPressed: () {
                     Navigator.pop(context);
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit, color: AppColors.textColor),
+                  onPressed: () {
+                    // Handle edit action
                   },
                 ),
               ],
@@ -39,10 +46,11 @@ class AccountModal extends StatelessWidget {
                   )
                 : const SizedBox.shrink(),
             AccountField(value: clickedAccount.password, isPassword: true),
-            clickedAccount.others.isNotEmpty
+            clickedAccount.other.isNotEmpty
                 ? AccountField(
-                    value: clickedAccount.others,
+                    value: clickedAccount.other,
                     isPassword: false,
+                    isCopyable: false,
                   )
                 : const SizedBox.shrink(),
           ],

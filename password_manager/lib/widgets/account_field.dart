@@ -8,10 +8,13 @@ class AccountField extends StatefulWidget {
     super.key,
     required this.value,
     required this.isPassword,
+    this.isCopyable = true,
   });
 
   final String value;
   final bool isPassword;
+
+  final dynamic isCopyable;
 
   @override
   State<AccountField> createState() => _AccountFieldState();
@@ -65,13 +68,15 @@ class _AccountFieldState extends State<AccountField> {
                         },
                       )
                     : SizedBox.shrink(),
-                IconButton(
-                  icon: Icon(Icons.copy, color: AppColors.textColor),
-                  onPressed: () {
-                    Clipboard.setData(ClipboardData(text: widget.value));
-                    PopUpSnackBar.show(context, 'Copied to clipboard');
-                  },
-                ),
+                widget.isCopyable
+                    ? IconButton(
+                        icon: Icon(Icons.copy, color: AppColors.textColor),
+                        onPressed: () {
+                          Clipboard.setData(ClipboardData(text: widget.value));
+                          PopUpSnackBar.show(context, 'Copied to clipboard');
+                        },
+                      )
+                    : SizedBox.shrink(),
               ],
             ),
           ],

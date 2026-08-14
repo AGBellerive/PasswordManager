@@ -5,14 +5,14 @@ class Account {
   final String username;
   final String email;
   final String password;
-  final String others;
+  final String other;
 
   Account({
     required this.site,
     required this.username,
     required this.email,
     required this.password,
-    required this.others,
+    required this.other,
   });
 
   factory Account.fromJson(Map<String, dynamic> json) {
@@ -21,7 +21,7 @@ class Account {
       username: json['Username'] ?? '',
       email: json['Email'] ?? '',
       password: json['Password'] ?? '',
-      others: json['Others'] ?? '',
+      other: json['Other'] ?? '',
     );
   }
 
@@ -31,11 +31,11 @@ class Account {
       'Username': username,
       'Email': email,
       'Password': password,
-      'Others': others,
+      'Other': other,
     };
   }
 
   String toString() {
-    return 'Account(site: $site, username: $username, email: $email, password: $password, others: $others)';
+    return 'Account(site: $site, username: $username, email: $email, password: $password, other: $other)';
   }
 }
