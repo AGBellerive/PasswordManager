@@ -35,11 +35,16 @@ class _AccountFieldState extends State<AccountField> {
   }
 
   Widget _appropriateTextField() {
+    final bool shouldObscure = widget.isPassword && !_isPasswordVisible;
+
     if (widget.labelText == 'Other') {
       return TextField(
-        keyboardType: TextInputType.multiline,
+        keyboardType: widget.isPassword
+            ? TextInputType.text
+            : TextInputType.multiline,
         minLines: 1,
-        maxLines: null,
+        maxLines: widget.isPassword ? 1 : null,
+        obscureText: shouldObscure,
         controller: widget.controller,
         readOnly: !widget.isEditing,
         style: AppColors.textTheme.copyWith(fontSize: 24),
@@ -55,10 +60,13 @@ class _AccountFieldState extends State<AccountField> {
       );
     } else {
       return TextField(
-        keyboardType: TextInputType.multiline,
+        keyboardType: widget.isPassword
+            ? TextInputType.visiblePassword
+            : TextInputType.text,
+        maxLines: 1,
+        obscureText: shouldObscure,
         controller: widget.controller,
         readOnly: !widget.isEditing,
-
         style: AppColors.textTheme.copyWith(fontSize: 24),
         decoration: InputDecoration(
           border: widget.isEditing
@@ -85,7 +93,7 @@ class _AccountFieldState extends State<AccountField> {
               widget.labelText!,
               style: AppColors.textTheme.copyWith(
                 fontSize: 12,
-                color: AppColors.textColor.withOpacity(0.6),
+                color: AppColors.textColor.withValues(alpha: 0.6),
               ),
             ),
           ),

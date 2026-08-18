@@ -37,12 +37,48 @@ class FileOperations {
     List<Account> accounts,
   ) async {
     try {
+      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
       final file = File(path);
-      await file.writeAsString(jsonEncode(accounts));
+      await file.writeAsString(encoder.convert(accounts));
       return true;
     } catch (e) {
       print('Error writing file: $e');
       return false;
     }
+  }
+
+  static Future<bool> updateAccountInFile(
+    String path,
+    Account oldAccount,
+    Account newAccount,
+  ) async {
+    try {
+      final file = File(path);
+      if (await file.exists()) {
+        final fileContents = await file.readAsString();
+        final List<dynamic> jsonList = jsonDecode(fileContents);
+        final List<Account> accounts = jsonList
+            .map((jsonMap) => Account.fromJson(jsonMap))
+            .toList();
+
+        final index = accounts.indexWhere(
+          (account) =>
+              account.site == oldAccount.site &&
+              account.username == oldAccount.username &&
+              account.email == oldAccount.email &&
+              account.password == oldAccount.password &&
+              account.other == oldAccount.other,
+        );
+
+        if (index != -1) {
+          accounts[index] = newAccount;
+          await file.writeAsString(jsonEncode(accounts));
+          return true;
+        }
+      }
+    } catch (e) {
+      print('Error updating account in file: $e');
+    }
+    return false;
   }
 }

@@ -14,6 +14,29 @@ class AccountCard extends StatefulWidget {
 }
 
 class _AccountCardState extends State<AccountCard> {
+  void _openModal(BuildContext context) async {
+    final result = await showModalBottomSheet<Account>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: AppColors.cardColor,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.cardColor,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: AccountModal(clickedAccount: widget.account),
+        );
+      },
+    );
+    if (result != null) {
+      widget.onAccountUpdated!(result);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final account = widget.account;
@@ -30,29 +53,7 @@ class _AccountCardState extends State<AccountCard> {
         style: AppColors.textTheme.copyWith(fontSize: 10),
       ),
       trailing: const Icon(Icons.arrow_forward, color: AppColors.textColor),
-      onTap: () async {
-        final updatedAccount = await showModalBottomSheet<Account>(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: AppColors.cardColor,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          builder: (BuildContext context) {
-            return Container(
-              decoration: const BoxDecoration(
-                color: AppColors.cardColor,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              child: AccountModal(clickedAccount: account),
-            );
-          },
-        );
-
-        if (updatedAccount != null && widget.onAccountUpdated != null) {
-          widget.onAccountUpdated!(updatedAccount);
-        }
-      },
+      onTap: () => _openModal(context),
     );
   }
 }

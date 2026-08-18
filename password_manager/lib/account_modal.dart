@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:password_manager/utils/fileoperations.dart';
 import './constants/app_colors.dart';
 import 'models/account.dart';
+import 'utils/sharedpref.dart';
 import 'widgets/account_field.dart';
 
 class AccountModal extends StatefulWidget {
@@ -18,6 +20,7 @@ class _AccountModalState extends State<AccountModal> {
   late TextEditingController _usernameController;
   late TextEditingController _passwordController;
   late TextEditingController _otherController;
+  bool isAccountUpdated = false;
 
   bool _isEditing = false;
 
@@ -67,14 +70,40 @@ class _AccountModalState extends State<AccountModal> {
       other: _otherController.text.trim(),
     );
 
-    Navigator.pop(context, updatedAccount);
+    SharedPreferencesUtil.get('passwordFile').then((path) {
+      FileOperations.updateAccountInFile(
+        path,
+        widget.clickedAccount,
+        updatedAccount,
+      ).then((success) {
+        if (success) {
+          Navigator.pop(context, updatedAccount);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Account updated successfully.')),
+          );
+          setState(() {
+            _isEditing = false;
+            isAccountUpdated = true;
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to update account.')),
+          );
+        }
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          left: 16.0,
+          right: 16.0,
+          top: 8.0,
+        ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

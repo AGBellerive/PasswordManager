@@ -6,9 +6,9 @@ class SharedPreferencesUtil {
     await prefs.setString(key, value);
   }
 
-  static Future<String?> get(String key) async {
+  static Future<String> get(String key) async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(key);
+    return prefs.getString(key) ?? '';
   }
 
   static Future<bool> containsKey(String key) async {
