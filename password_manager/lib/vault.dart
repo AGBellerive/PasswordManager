@@ -21,6 +21,7 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
   Future<List<Account>> initialFutureAccounts = Future.value([]);
   List<Account> _allAccounts = [];
   List<Account> _filteredAccounts = [];
+  bool _isSorted = false;
 
   late Animation<double> _animation;
   late AnimationController _animationController;
@@ -75,6 +76,21 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
             username.contains(query);
       }).toList();
     });
+  }
+
+  void _updateAccount(Account oldAccount, Account newAccount) async {
+    final index = _allAccounts.indexOf(oldAccount);
+    if (index != -1) {
+      setState(() {
+        _allAccounts[index] = newAccount;
+      });
+      _onSearchChanged();
+
+      final path = await SharedPreferencesUtil.get('passwordFile');
+      if (path != null) {
+        await FileOperations.writeAccountFile(path, _allAccounts);
+      }
+    }
   }
 
   @override
@@ -133,6 +149,7 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
 
                   return ClipRect(
                     child: ListView.builder(
+                      key: const PageStorageKey('vault_list'),
                       clipBehavior: Clip.antiAlias,
                       itemCount: _filteredAccounts.length,
                       itemBuilder: (context, index) {
@@ -140,8 +157,13 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
                         return Material(
                           color: AppColors.backgroundColor,
                           child: Padding(
-                            padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                            child: AccountCard(account: account),
+                            padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+                            child: AccountCard(
+                              account: account,
+                              onAccountUpdated: (updatedAccount) {
+                                _updateAccount(account, updatedAccount);
+                              },
+                            ),
                           ),
                         );
                       },
@@ -161,22 +183,46 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
         items: <Bubble>[
           // Floating action menu item
           Bubble(
-            title: "Settings",
-            iconColor: Colors.white,
-            bubbleColor: Colors.blue,
-            icon: Icons.settings,
-            titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+            title: "Add",
+            iconColor: AppColors.cardColor,
+            bubbleColor: AppColors.textColor,
+            icon: Icons.add,
+            titleStyle: TextStyle(fontSize: 16, color: AppColors.cardColor),
             onPress: () {
               _animationController.reverse();
             },
           ),
-          // Floating action menu item
           Bubble(
-            title: "Add",
-            iconColor: Colors.white,
-            bubbleColor: Colors.blue,
-            icon: Icons.add,
-            titleStyle: TextStyle(fontSize: 16, color: Colors.white),
+            title: "Sort",
+            iconColor: AppColors.cardColor,
+            bubbleColor: AppColors.textColor,
+            icon: _isSorted ? Icons.sort : Icons.sort_by_alpha,
+            titleStyle: TextStyle(fontSize: 16, color: AppColors.cardColor),
+            onPress: () {
+              _animationController.reverse();
+              setState(() {
+                if (_isSorted) {
+                  _allAccounts.sort(
+                    (a, b) =>
+                        b.site.toLowerCase().compareTo(a.site.toLowerCase()),
+                  );
+                } else {
+                  _allAccounts.sort(
+                    (a, b) =>
+                        a.site.toLowerCase().compareTo(b.site.toLowerCase()),
+                  );
+                }
+                _isSorted = !_isSorted;
+                _filteredAccounts = _allAccounts;
+              });
+            },
+          ),
+          Bubble(
+            title: "Settings",
+            iconColor: AppColors.cardColor,
+            bubbleColor: AppColors.textColor,
+            icon: Icons.settings,
+            titleStyle: TextStyle(fontSize: 16, color: AppColors.cardColor),
             onPress: () {
               _animationController.reverse();
             },
@@ -192,11 +238,10 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
             : _animationController.forward(),
 
         // Floating Action button Icon color
-        iconColor: Colors.blue,
-
+        iconColor: AppColors.cardColor, // icon color
         // Flaoting Action button Icon
         iconData: Icons.menu,
-        backGroundColor: Colors.white,
+        backGroundColor: AppColors.textColor, //background color
       ),
     );
   }

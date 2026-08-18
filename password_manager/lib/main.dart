@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
       title: 'Password Manager',
       theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.green)),
       home: const MyHomePage(title: 'Home Page'),
+      debugShowCheckedModeBanner: false,
     );
   }
 }

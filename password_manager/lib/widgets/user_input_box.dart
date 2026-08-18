@@ -33,6 +33,9 @@ class _UserInputBoxState extends State<UserInputBox> {
       controller: widget.controller,
       obscureText: widget.isPassword && !isPasswordVisible,
       keyboardType: widget.keyboardType,
+      onTapOutside: (PointerDownEvent event) {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(cornerRadius),

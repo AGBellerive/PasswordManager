@@ -17,11 +17,11 @@ class Account {
 
   factory Account.fromJson(Map<String, dynamic> json) {
     return Account(
-      site: json['Site'] ?? '',
-      username: json['Username'] ?? '',
-      email: json['Email'] ?? '',
-      password: json['Password'] ?? '',
-      other: json['Other'] ?? '',
+      site: json['Site']?.trim() ?? '',
+      username: json['Username']?.trim() ?? '',
+      email: json['Email']?.trim() ?? '',
+      password: json['Password']?.trim() ?? '',
+      other: json['Other']?.trim() ?? '',
     );
   }
 

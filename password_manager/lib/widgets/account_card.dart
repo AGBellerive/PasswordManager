@@ -4,9 +4,10 @@ import '../models/account.dart';
 import '../account_modal.dart';
 
 class AccountCard extends StatefulWidget {
-  const AccountCard({super.key, required this.account});
+  const AccountCard({super.key, required this.account, this.onAccountUpdated});
 
   final Account account;
+  final ValueChanged<Account>? onAccountUpdated;
 
   @override
   State<AccountCard> createState() => _AccountCardState();
@@ -17,7 +18,7 @@ class _AccountCardState extends State<AccountCard> {
   Widget build(BuildContext context) {
     final account = widget.account;
     return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 20),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 20),
       tileColor: AppColors.cardColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
@@ -28,18 +29,18 @@ class _AccountCardState extends State<AccountCard> {
         account.email.isNotEmpty ? account.email : account.username,
         style: AppColors.textTheme.copyWith(fontSize: 10),
       ),
-      trailing: Icon(Icons.arrow_forward, color: AppColors.textColor),
-      onTap: () {
-        showModalBottomSheet(
+      trailing: const Icon(Icons.arrow_forward, color: AppColors.textColor),
+      onTap: () async {
+        final updatedAccount = await showModalBottomSheet<Account>(
           context: context,
           isScrollControlled: true,
           backgroundColor: AppColors.cardColor,
-          shape: RoundedRectangleBorder(
+          shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
           ),
           builder: (BuildContext context) {
             return Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: AppColors.cardColor,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
               ),
@@ -47,6 +48,10 @@ class _AccountCardState extends State<AccountCard> {
             );
           },
         );
+
+        if (updatedAccount != null && widget.onAccountUpdated != null) {
+          widget.onAccountUpdated!(updatedAccount);
+        }
       },
     );
   }

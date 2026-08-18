@@ -6,15 +6,18 @@ import './pop_up_snack_bar.dart';
 class AccountField extends StatefulWidget {
   const AccountField({
     super.key,
-    required this.value,
+    required this.controller,
     required this.isPassword,
     this.isCopyable = true,
+    this.isEditing = false,
+    this.labelText,
   });
 
-  final String value;
+  final TextEditingController controller;
   final bool isPassword;
-
-  final dynamic isCopyable;
+  final bool isCopyable;
+  final bool isEditing;
+  final String? labelText;
 
   @override
   State<AccountField> createState() => _AccountFieldState();
@@ -23,42 +26,81 @@ class AccountField extends StatefulWidget {
 class _AccountFieldState extends State<AccountField> {
   bool _isPasswordVisible = false;
 
-  String _passwordMask(String password) {
-    return '*' * password.length;
+  @override
+  void didUpdateWidget(covariant AccountField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.isEditing && !oldWidget.isEditing) {
+      _isPasswordVisible = true;
+    }
   }
 
-  String _passwordUnmask(String password) {
-    return password;
+  Widget _appropriateTextField() {
+    if (widget.labelText == 'Other') {
+      return TextField(
+        keyboardType: TextInputType.multiline,
+        minLines: 1,
+        maxLines: null,
+        controller: widget.controller,
+        readOnly: !widget.isEditing,
+        style: AppColors.textTheme.copyWith(fontSize: 24),
+        decoration: InputDecoration(
+          border: widget.isEditing
+              ? const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.textColor),
+                )
+              : InputBorder.none,
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+        ),
+      );
+    } else {
+      return TextField(
+        keyboardType: TextInputType.multiline,
+        controller: widget.controller,
+        readOnly: !widget.isEditing,
+
+        style: AppColors.textTheme.copyWith(fontSize: 24),
+        decoration: InputDecoration(
+          border: widget.isEditing
+              ? const UnderlineInputBorder(
+                  borderSide: BorderSide(color: AppColors.textColor),
+                )
+              : InputBorder.none,
+          isDense: true,
+          contentPadding: const EdgeInsets.symmetric(vertical: 8.0),
+        ),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (widget.labelText != null && widget.isEditing)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: Text(
+              widget.labelText!,
+              style: AppColors.textTheme.copyWith(
+                fontSize: 12,
+                color: AppColors.textColor.withOpacity(0.6),
+              ),
+            ),
+          ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Visibility(
-                visible: widget.isPassword && !_isPasswordVisible,
-                replacement: Text(
-                  _passwordUnmask(widget.value),
-                  style: AppColors.textTheme.copyWith(fontSize: 24),
-                  overflow: TextOverflow.ellipsis,
-                ),
-                child: Text(
-                  _passwordMask(widget.value),
-                  style: AppColors.textTheme.copyWith(fontSize: 24),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            ),
+            Expanded(child: _appropriateTextField()),
             Row(
               children: [
                 widget.isPassword
                     ? IconButton(
                         icon: Icon(
-                          Icons.remove_red_eye,
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
                           color: AppColors.textColor,
                         ),
                         onPressed: () {
@@ -67,21 +109,26 @@ class _AccountFieldState extends State<AccountField> {
                           });
                         },
                       )
-                    : SizedBox.shrink(),
-                widget.isCopyable
+                    : const SizedBox.shrink(),
+                (widget.isCopyable && !widget.isEditing)
                     ? IconButton(
-                        icon: Icon(Icons.copy, color: AppColors.textColor),
+                        icon: const Icon(
+                          Icons.copy,
+                          color: AppColors.textColor,
+                        ),
                         onPressed: () {
-                          Clipboard.setData(ClipboardData(text: widget.value));
+                          Clipboard.setData(
+                            ClipboardData(text: widget.controller.text),
+                          );
                           PopUpSnackBar.show(context, 'Copied to clipboard');
                         },
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
               ],
             ),
           ],
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
       ],
     );
   }

@@ -3,10 +3,72 @@ import './constants/app_colors.dart';
 import 'models/account.dart';
 import 'widgets/account_field.dart';
 
-class AccountModal extends StatelessWidget {
+class AccountModal extends StatefulWidget {
   const AccountModal({super.key, required this.clickedAccount});
 
   final Account clickedAccount;
+
+  @override
+  State<AccountModal> createState() => _AccountModalState();
+}
+
+class _AccountModalState extends State<AccountModal> {
+  late TextEditingController _siteController;
+  late TextEditingController _emailController;
+  late TextEditingController _usernameController;
+  late TextEditingController _passwordController;
+  late TextEditingController _otherController;
+
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _siteController = TextEditingController(text: widget.clickedAccount.site);
+    _emailController = TextEditingController(text: widget.clickedAccount.email);
+    _usernameController = TextEditingController(
+      text: widget.clickedAccount.username,
+    );
+    _passwordController = TextEditingController(
+      text: widget.clickedAccount.password,
+    );
+    _otherController = TextEditingController(text: widget.clickedAccount.other);
+  }
+
+  @override
+  void dispose() {
+    _siteController.dispose();
+    _emailController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _otherController.dispose();
+    super.dispose();
+  }
+
+  void _saveChanges() {
+    if (_siteController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Site field cannot be empty.')),
+      );
+      return;
+    }
+    if (_passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Password field cannot be empty.')),
+      );
+      return;
+    }
+
+    final updatedAccount = Account(
+      site: _siteController.text.trim(),
+      email: _emailController.text.trim(),
+      username: _usernameController.text.trim(),
+      password: _passwordController.text,
+      other: _otherController.text.trim(),
+    );
+
+    Navigator.pop(context, updatedAccount);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,30 +89,58 @@ class AccountModal extends StatelessWidget {
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.edit, color: AppColors.textColor),
+                  icon: Icon(
+                    _isEditing ? Icons.check : Icons.edit,
+                    color: AppColors.textColor,
+                  ),
                   onPressed: () {
-                    // Handle edit action
+                    if (_isEditing) {
+                      _saveChanges();
+                    } else {
+                      setState(() {
+                        _isEditing = true;
+                      });
+                    }
                   },
                 ),
               ],
             ),
             const SizedBox(height: 8),
-            AccountField(value: clickedAccount.site, isPassword: false),
-            clickedAccount.email.isNotEmpty
-                ? AccountField(value: clickedAccount.email, isPassword: false)
-                : const SizedBox.shrink(),
-            clickedAccount.username.isNotEmpty
+            AccountField(
+              controller: _siteController,
+              isPassword: false,
+              isEditing: _isEditing,
+              labelText: 'Site',
+            ),
+            (_isEditing || widget.clickedAccount.email.isNotEmpty)
                 ? AccountField(
-                    value: clickedAccount.username,
+                    controller: _emailController,
                     isPassword: false,
+                    isEditing: _isEditing,
+                    labelText: 'Email',
                   )
                 : const SizedBox.shrink(),
-            AccountField(value: clickedAccount.password, isPassword: true),
-            clickedAccount.other.isNotEmpty
+            (_isEditing || widget.clickedAccount.username.isNotEmpty)
                 ? AccountField(
-                    value: clickedAccount.other,
+                    controller: _usernameController,
                     isPassword: false,
+                    isEditing: _isEditing,
+                    labelText: 'Username',
+                  )
+                : const SizedBox.shrink(),
+            AccountField(
+              controller: _passwordController,
+              isPassword: true,
+              isEditing: _isEditing,
+              labelText: 'Password',
+            ),
+            (_isEditing || widget.clickedAccount.other.isNotEmpty)
+                ? AccountField(
+                    controller: _otherController,
+                    isPassword: false,
+                    isEditing: _isEditing,
                     isCopyable: false,
+                    labelText: 'Other',
                   )
                 : const SizedBox.shrink(),
           ],
