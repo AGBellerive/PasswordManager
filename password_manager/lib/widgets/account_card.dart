@@ -4,10 +4,16 @@ import '../models/account.dart';
 import '../account_modal.dart';
 
 class AccountCard extends StatefulWidget {
-  const AccountCard({super.key, required this.account, this.onAccountUpdated});
+  const AccountCard({
+    super.key,
+    required this.account,
+    this.onAccountUpdated,
+    this.onAccountDeleted,
+  });
 
   final Account account;
   final ValueChanged<Account>? onAccountUpdated;
+  final VoidCallback? onAccountDeleted;
 
   @override
   State<AccountCard> createState() => _AccountCardState();
@@ -15,7 +21,7 @@ class AccountCard extends StatefulWidget {
 
 class _AccountCardState extends State<AccountCard> {
   void _openModal(BuildContext context) async {
-    final result = await showModalBottomSheet<Account>(
+    final result = await showModalBottomSheet<dynamic>(
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.cardColor,
@@ -32,8 +38,14 @@ class _AccountCardState extends State<AccountCard> {
         );
       },
     );
-    if (result != null) {
-      widget.onAccountUpdated!(result);
+    if (result == 'deleted') {
+      if (widget.onAccountDeleted != null) {
+        widget.onAccountDeleted!();
+      }
+    } else if (result is Account) {
+      if (widget.onAccountUpdated != null) {
+        widget.onAccountUpdated!(result);
+      }
     }
   }
 

@@ -7,7 +7,6 @@ import 'utils/fileoperations.dart';
 import 'models/account.dart';
 import 'utils/sharedpref.dart';
 import 'widgets/account_card.dart';
-import 'account_modal.dart';
 
 class Vault extends StatefulWidget {
   const Vault({super.key});
@@ -122,7 +121,13 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
       );
     }
 
-    _loadAccounts();
+    _loadAccounts().then((_) {
+      if (mounted) {
+        setState(() {
+          _searchController.clear();
+        });
+      }
+    });
   }
 
   @override
@@ -194,6 +199,16 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
                               account: account,
                               onAccountUpdated: (updatedAccount) {
                                 _updateAccount(account, updatedAccount);
+                              },
+                              onAccountDeleted: () {
+                                _loadAccounts().then((_) {
+                                  if (mounted) {
+                                    setState(() {
+                                      _searchController.clear();
+                                      _onSearchChanged();
+                                    });
+                                  }
+                                });
                               },
                             ),
                           ),

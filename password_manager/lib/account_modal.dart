@@ -94,6 +94,67 @@ class _AccountModalState extends State<AccountModal> {
     });
   }
 
+  void _deleteAccount() {
+    SharedPreferencesUtil.get('passwordFile').then((path) {
+      FileOperations.deleteAccount(path, widget.clickedAccount).then((success) {
+        if (success) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Account deleted successfully.')),
+            );
+            Navigator.pop(context, 'deleted');
+          }
+        } else {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Failed to delete account.')),
+            );
+          }
+        }
+      });
+    });
+  }
+
+  void _confirmDelete() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: AppColors.cardColor,
+          title: const Text(
+            'Delete Account',
+            style: TextStyle(color: AppColors.textColor),
+          ),
+          content: const Text(
+            'Are you sure you want to delete this account? This action cannot be undone.',
+            style: TextStyle(color: AppColors.textColor),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: AppColors.textColor),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _deleteAccount();
+              },
+              child: const Text(
+                'Delete',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -117,20 +178,29 @@ class _AccountModalState extends State<AccountModal> {
                     Navigator.pop(context);
                   },
                 ),
-                IconButton(
-                  icon: Icon(
-                    _isEditing ? Icons.check : Icons.edit,
-                    color: AppColors.textColor,
-                  ),
-                  onPressed: () {
-                    if (_isEditing) {
-                      _saveChanges();
-                    } else {
-                      setState(() {
-                        _isEditing = true;
-                      });
-                    }
-                  },
+                Row(
+                  children: [
+                    if (_isEditing)
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: _confirmDelete,
+                      ),
+                    IconButton(
+                      icon: Icon(
+                        _isEditing ? Icons.check : Icons.edit,
+                        color: AppColors.textColor,
+                      ),
+                      onPressed: () {
+                        if (_isEditing) {
+                          _saveChanges();
+                        } else {
+                          setState(() {
+                            _isEditing = true;
+                          });
+                        }
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

@@ -125,7 +125,8 @@ class FileOperations {
 
         if (index != -1) {
           accounts.removeAt(index);
-          await file.writeAsString(jsonEncode(accounts));
+          JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+          await file.writeAsString(encoder.convert(accounts));
           return true;
         }
       }
