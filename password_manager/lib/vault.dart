@@ -2,6 +2,7 @@ import 'package:floating_action_bubble/floating_action_bubble.dart';
 import 'package:flutter/material.dart';
 import './constants/app_colors.dart';
 import './widgets/user_input_box.dart';
+import 'create_account_modal.dart';
 import 'utils/fileoperations.dart';
 import 'models/account.dart';
 import 'utils/sharedpref.dart';
@@ -91,6 +92,37 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
         await FileOperations.writeAccountFile(path, _allAccounts);
       }
     }
+  }
+
+  Future<void> _showAddAccountModal() async {
+    var account_names = _allAccounts.map((account) => account.site).toList();
+
+    Map<String, String> accountNames = {
+      for (var name in account_names) name: name,
+    };
+
+    final newAccount = await showModalBottomSheet<Account>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: const BoxDecoration(
+            color: AppColors.cardColor,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: CreateAccountModal(accountNames: accountNames),
+        );
+      },
+    );
+
+    if (newAccount != null && mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Account created successfully.')),
+      );
+    }
+
+    _loadAccounts();
   }
 
   @override
@@ -190,6 +222,7 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
             titleStyle: TextStyle(fontSize: 16, color: AppColors.cardColor),
             onPress: () {
               _animationController.reverse();
+              _showAddAccountModal();
             },
           ),
           Bubble(
