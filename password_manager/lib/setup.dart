@@ -6,7 +6,6 @@ import './constants/app_colors.dart';
 import '../utils/fileoperations.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:io';
-import '../models/account.dart';
 import './main.dart';
 import 'package:dart_ping/dart_ping.dart';
 
@@ -27,7 +26,7 @@ class _SetupPageState extends State<SetupPage> {
   bool localSelected = false;
   bool biometricLock = false;
   bool connectionSuccess = false;
-  File passwordFile = new File('');
+  File passwordFile = File('');
 
   bool _enableSetUpButton() {
     return _masterPasswordController.text.isNotEmpty &&
@@ -70,7 +69,7 @@ class _SetupPageState extends State<SetupPage> {
             if (pickedFile != null) {
               final file = File(pickedFile.path!);
 
-              final accounts = await FileOperations.readAccountFile(file.path);
+              await FileOperations.readAccountFile(file.path);
               setState(() {
                 passwordFile = file;
               });
@@ -129,7 +128,7 @@ class _SetupPageState extends State<SetupPage> {
           },
           child: Text("Test Remote"),
           style: ButtonStyle(
-            backgroundColor: MaterialStatePropertyAll(
+            backgroundColor: WidgetStatePropertyAll(
               connectionSuccess ? Colors.green : AppColors.blueAccent,
             ),
           ),
@@ -209,7 +208,7 @@ class _SetupPageState extends State<SetupPage> {
                   Radio(
                     value: 1,
                     groupValue: _storageOption,
-                    fillColor: MaterialStatePropertyAll(AppColors.blueAccent),
+                    fillColor: const WidgetStatePropertyAll(AppColors.blueAccent),
                     onChanged: (value) {
                       setState(() {
                         _storageOptionPressed(value);
@@ -220,7 +219,7 @@ class _SetupPageState extends State<SetupPage> {
                   Radio(
                     value: 2,
                     groupValue: _storageOption,
-                    fillColor: MaterialStatePropertyAll(AppColors.blueAccent),
+                    fillColor: const WidgetStatePropertyAll(AppColors.blueAccent),
                     onChanged: (value) {
                       setState(() {
                         _storageOptionPressed(value);

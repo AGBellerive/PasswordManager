@@ -72,7 +72,7 @@ class FileOperations {
 
         if (index != -1) {
           accounts[index] = newAccount;
-          await file.writeAsString(jsonEncode(accounts));
+          await saveJSON(path, accounts);
           return true;
         }
       }
@@ -95,8 +95,7 @@ class FileOperations {
       }
       accounts.add(newAccount);
 
-      JsonEncoder encoder = const JsonEncoder.withIndent('  ');
-      await file.writeAsString(encoder.convert(accounts));
+      await saveJSON(path, accounts);
       return true;
     } catch (e) {
       print('Error creating account in file: $e');
@@ -125,8 +124,7 @@ class FileOperations {
 
         if (index != -1) {
           accounts.removeAt(index);
-          JsonEncoder encoder = const JsonEncoder.withIndent('  ');
-          await file.writeAsString(encoder.convert(accounts));
+          await saveJSON(path, accounts);
           return true;
         }
       }
@@ -134,5 +132,11 @@ class FileOperations {
       print('Error deleting account from file: $e');
     }
     return false;
+  }
+
+  static Future<void> saveJSON(String path, List<Account> accounts) async {
+    final file = File(path);
+    JsonEncoder encoder = const JsonEncoder.withIndent('  ');
+    await file.writeAsString(encoder.convert(accounts));
   }
 }

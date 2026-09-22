@@ -76,21 +76,13 @@ class _MyHomePageState extends State<MyHomePage> {
     PopUpSnackBar.show(context, 'Password Hint:\nInfo pressed');
   }
 
-  void _clearSharedPrefs() {
-    SharedPreferencesUtil.clear();
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SetupPage()),
-    );
-  }
-
   void _unlockPressed() {
     //read shared prefrence for the masterHash
     //compare the _passwordController.text with the masterHash
     //if match, navigate to home page
     //if not match, show error message
     SharedPreferencesUtil.get('masterPassword').then((masterHash) {
-      if (masterHash != null && _passwordController.text == masterHash) {
+      if (masterHash.isNotEmpty && _passwordController.text == masterHash) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => Vault()),

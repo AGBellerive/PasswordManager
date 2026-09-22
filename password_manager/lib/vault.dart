@@ -7,6 +7,7 @@ import 'utils/fileoperations.dart';
 import 'models/account.dart';
 import 'utils/sharedpref.dart';
 import 'widgets/account_card.dart';
+import 'widgets/pop_up_snack_bar.dart';
 
 class Vault extends StatefulWidget {
   const Vault({super.key});
@@ -54,7 +55,7 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
 
   Future<List<Account>> _loadAccounts() async {
     final path = await SharedPreferencesUtil.get('passwordFile');
-    if (path != null) {
+    if (path.isNotEmpty) {
       final accounts = await FileOperations.readAccountFile(path);
       _allAccounts = accounts;
       _filteredAccounts = accounts;
@@ -87,7 +88,7 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
       _onSearchChanged();
 
       final path = await SharedPreferencesUtil.get('passwordFile');
-      if (path != null) {
+      if (path.isNotEmpty) {
         await FileOperations.writeAccountFile(path, _allAccounts);
       }
     }
@@ -116,9 +117,7 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
     );
 
     if (newAccount != null && mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account created successfully.')),
-      );
+      PopUpSnackBar.show(context, 'Account created successfully.');
     }
 
     _loadAccounts().then((_) {

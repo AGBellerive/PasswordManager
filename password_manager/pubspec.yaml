@@ -38,6 +38,7 @@ dependencies:
   file_picker: 12.0.0
   dart_ping: ^10.0.1
   floating_action_bubble: 1.1.4
+  local_auth: ^3.0.2
 
 dev_dependencies:
   flutter_test:

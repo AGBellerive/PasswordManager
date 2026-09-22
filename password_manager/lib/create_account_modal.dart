@@ -4,7 +4,7 @@ import './constants/app_colors.dart';
 import 'models/account.dart';
 import 'utils/sharedpref.dart';
 import 'widgets/account_field.dart';
-import 'dart:collection';
+import 'widgets/pop_up_snack_bar.dart';
 
 class CreateAccountModal extends StatefulWidget {
   const CreateAccountModal({super.key, required this.accountNames});
@@ -24,6 +24,7 @@ class _CreateAccountModalState extends State<CreateAccountModal> {
 
   @override
   void initState() {
+    super.initState();
     _siteController = TextEditingController();
     _emailController = TextEditingController();
     _usernameController = TextEditingController();
@@ -32,31 +33,19 @@ class _CreateAccountModalState extends State<CreateAccountModal> {
   }
 
   Future<void> _saveChanges() async {
-    void showError(String message) {
-      ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(message)));
-    }
-
     if (widget.accountNames.containsKey(_siteController.text)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('An account with this site already exists.'),
-        ),
+      PopUpSnackBar.showError(
+        context,
+        'An account with this site already exists.',
       );
       return;
     }
     if (_siteController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Site field cannot be empty.')),
-      );
+      PopUpSnackBar.showError(context, 'Site field cannot be empty.');
       return;
     }
     if (_passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password field cannot be empty.')),
-      );
+      PopUpSnackBar.showError(context, 'Password field cannot be empty.');
       return;
     }
 
@@ -69,14 +58,14 @@ class _CreateAccountModalState extends State<CreateAccountModal> {
     );
 
     final path = await SharedPreferencesUtil.get('passwordFile');
-    if (path != null) {
+    if (path.isNotEmpty) {
       final success = await FileOperations.createAccount(path, newAccount);
       if (!mounted) return;
 
       if (success) {
         Navigator.pop(context, newAccount);
       } else {
-        showError('Failed to create account.');
+        PopUpSnackBar.showError(context, 'Failed to create account.');
       }
     }
   }

@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class Account {
   final String site;
   final String username;
@@ -35,6 +33,7 @@ class Account {
     };
   }
 
+  @override
   String toString() {
     return 'Account(site: $site, username: $username, email: $email, password: $password, other: $other)';
   }

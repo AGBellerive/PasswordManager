@@ -4,6 +4,7 @@ import './constants/app_colors.dart';
 import 'models/account.dart';
 import 'utils/sharedpref.dart';
 import 'widgets/account_field.dart';
+import 'widgets/pop_up_snack_bar.dart';
 
 class AccountModal extends StatefulWidget {
   const AccountModal({super.key, required this.clickedAccount});
@@ -50,15 +51,11 @@ class _AccountModalState extends State<AccountModal> {
 
   void _saveChanges() {
     if (_siteController.text.trim().isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Site field cannot be empty.')),
-      );
+      PopUpSnackBar.showError(context, 'Site field cannot be empty.');
       return;
     }
     if (_passwordController.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Password field cannot be empty.')),
-      );
+      PopUpSnackBar.showError(context, 'Password field cannot be empty.');
       return;
     }
 
@@ -78,17 +75,13 @@ class _AccountModalState extends State<AccountModal> {
       ).then((success) {
         if (success) {
           Navigator.pop(context, updatedAccount);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Account updated successfully.')),
-          );
+          PopUpSnackBar.show(context, 'Account updated successfully.');
           setState(() {
             _isEditing = false;
             isAccountUpdated = true;
           });
         } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to update account.')),
-          );
+          PopUpSnackBar.showError(context, 'Failed to update account.');
         }
       });
     });
@@ -99,16 +92,12 @@ class _AccountModalState extends State<AccountModal> {
       FileOperations.deleteAccount(path, widget.clickedAccount).then((success) {
         if (success) {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Account deleted successfully.')),
-            );
+            PopUpSnackBar.show(context, 'Account deleted successfully.');
             Navigator.pop(context, 'deleted');
           }
         } else {
           if (mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Failed to delete account.')),
-            );
+            PopUpSnackBar.showError(context, 'Failed to delete account.');
           }
         }
       });
@@ -144,10 +133,7 @@ class _AccountModalState extends State<AccountModal> {
                 Navigator.of(context).pop();
                 _deleteAccount();
               },
-              child: const Text(
-                'Delete',
-                style: TextStyle(color: Colors.red),
-              ),
+              child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),
           ],
         );
