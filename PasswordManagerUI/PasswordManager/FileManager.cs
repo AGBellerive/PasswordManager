@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows;
 using Newtonsoft.Json;
 using log4net;
+using System.Linq;
 
 namespace PasswordManager
 {
@@ -17,7 +18,7 @@ namespace PasswordManager
     {
         private static readonly ILog LOG = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public static List<Account> allAccounts { get; set; } = new List<Account>();
-        public List<Account> multiAccountFind { get; set; } = new List<Account>();
+        public static List<Account> multiAccountFind { get; set; } = new List<Account>();
         private string path;
         private readonly Navigation nav = new Navigation();
 
@@ -326,6 +327,16 @@ namespace PasswordManager
             settings = JsonConvert.DeserializeObject<FileSetup>(setupText);
 
             return settings.LastLogin;
+        }
+
+        /*
+         * https://www.tutorialsteacher.com/linq/what-is-linq
+         */
+        public HashSet<String> listOfEmails()
+        {
+            readJson();
+            return FileManager.allAccounts.Select(account => account.Email.Trim()).ToHashSet();
+            //Select all the accounts and trim the ends. When coverting to a hash set, ignore the case
         }
     }
 }

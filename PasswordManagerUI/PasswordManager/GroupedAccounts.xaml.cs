@@ -31,23 +31,12 @@ namespace PasswordManager
             AccountListWithEmail.Focus();
             AccountListScroller.Visibility = Visibility.Hidden;
             AccountListPasswordScroller.Visibility = Visibility.Hidden;
-        }
 
-        private void searchEmail(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return)
+            foreach (string email in manager.listOfEmails())
             {
-                AccountListWithEmail.Text = "";
-                List<Account> matched = manager.groupEmail(emailSearch.Text);
-
-                if (matched.Count > 0 && emailSearch.Text.Length > 0) AccountListScroller.Visibility = Visibility.Visible;
-                else AccountListScroller.Visibility = Visibility.Hidden;
-
-                foreach (Account acc in matched)
-                {
-                    AccountListWithEmail.Text += acc.Site + "\n";
-                }
+                EmailList.Items.Add(email);
             }
+           
         }
 
         private void searchPassword(object sender, KeyEventArgs e)
@@ -72,5 +61,25 @@ namespace PasswordManager
         {
             nav.GoToDisplayPassword();
         }
+
+        private void EmailListOnClick(object sender, SelectionChangedEventArgs e)
+        {
+            AccountListWithEmail.Text = "";
+
+            string selected = (string)EmailList.SelectedItem;
+
+            List<Account> matched = manager.groupEmail(selected);
+
+            if (matched.Count > 0 && selected.Length > 0) AccountListScroller.Visibility = Visibility.Visible;
+            else AccountListScroller.Visibility = Visibility.Hidden;
+
+            foreach (Account acc in matched)
+            {
+                AccountListWithEmail.Text += acc.Site + "\n";
+            }
+
+        }
+
+
     }
 }

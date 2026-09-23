@@ -27,22 +27,17 @@ namespace PasswordManager
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
 
-            SearchedAccountName.Focus();
             deleteBtn.Visibility = Visibility.Hidden;
+            otherLbl.Visibility = Visibility.Hidden;
+
             DisplayAllAccounts();
+
+            Loaded += (sender, e) => SearchBox.FocusInput(); // This allows the searchbox to pull focus when the page is launched
         }
 
         private void DisplayAllAccounts()
         {
             LOG.Info("Displaying all accounts");
-            AccountListScroller.Visibility = Visibility.Visible;
-            AccountList.Visibility = Visibility.Visible;
-            AccountList.Text = "";
-
-            foreach (Account item in FileManager.allAccounts)
-            {
-                AccountList.Text += item.Site + "\n";
-            }
         }
 
         private void returnBtn_Click(object sender, RoutedEventArgs e)
@@ -50,35 +45,16 @@ namespace PasswordManager
             nav.GoToDisplayPassword();
         }
 
-        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        private void SearchHandler(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Return)
+            string SearchedAccountNameText = ((TextBox)e.OriginalSource).Text;
+            if (SearchedAccountNameText.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0);
+
+            accountToBeDeleted = manager.specificSearch(SearchedAccountNameText);
+
+            if (accountToBeDeleted != null)
             {
-                if (SearchedAccountName.Text.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0);
-                accountToBeDeleted = manager.specificSearch(SearchedAccountName.Text);
-
-                if (accountToBeDeleted != null)
-                {
-                    AccountName.Content = accountToBeDeleted.Site;
-                    UserName.Content = accountToBeDeleted.Username;
-                    Email.Content = accountToBeDeleted.Email;
-                    Password.Content = accountToBeDeleted.Password;
-
-                    deleteBtn.Visibility = Visibility.Visible;
-
-                    if (accountToBeDeleted.Other.Length > 0)
-                    {
-                        otherLbl.Visibility = Visibility.Visible;
-                        Other.Visibility = Visibility.Visible;
-
-                        Other.Content = accountToBeDeleted.Other;
-                    }
-                    else
-                    {
-                        otherLbl.Visibility = Visibility.Hidden;
-                        Other.Visibility = Visibility.Hidden;
-                    }
-                }
+                PopulateLabels(accountToBeDeleted);
             }
         }
 
@@ -86,6 +62,37 @@ namespace PasswordManager
         {
             manager.deleteAccount(accountToBeDeleted);
             returnBtn_Click(sender,e);
+        }
+
+        private void PopulateLabels(Account accountToBeDeleted)
+        {
+            AccountName.Text = accountToBeDeleted.Site;
+            UserName.Text = accountToBeDeleted.Username;
+            Email.Text = accountToBeDeleted.Email;
+            Password.Text = accountToBeDeleted.Password;
+            deleteBtn.Visibility = Visibility.Visible;
+
+            if (accountToBeDeleted.Other.Length > 0)
+            {
+                otherLbl.Visibility = Visibility.Visible;
+                Other.Visibility = Visibility.Visible;
+
+                Other.Text = accountToBeDeleted.Other;
+            }
+            else
+            {
+                otherLbl.Visibility = Visibility.Hidden;
+                Other.Visibility = Visibility.Hidden;
+            }
+
+        }
+
+        private void AccountOnClick(object sender, RoutedEventArgs e)
+        {
+            Utils utils = new Utils();
+            Account clickedAccount = utils.AccountOnClick(sender, e);
+            PopulateLabels(clickedAccount);
+            SearchBox.SearchedAccountName.Text = clickedAccount.Site;
         }
     }
 }

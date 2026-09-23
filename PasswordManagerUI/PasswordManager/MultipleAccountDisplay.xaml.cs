@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using log4net;
 
 namespace PasswordManager
@@ -24,43 +25,27 @@ namespace PasswordManager
         {
             InitializeComponent();
             LOG.Info("Multiple account initilized");
-            SearchedAccountName.Focus();
             if (manager == null) manager = new FileManager();
 
             otherLbl.Visibility = Visibility.Hidden;
             Other.Visibility = Visibility.Hidden;
             CopyBtn.Visibility = Visibility.Hidden;
+            MyAccountList.AccountListBox.ItemsSource = FileManager.multiAccountFind;
 
+            Loaded += (sender, e) => SearchBox.FocusInput();
         }
-        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        private void SearchHandler(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Return)
-            {
-                Account account = manager.searchMultipleAccounts(SearchedAccountName.Text);
 
-                AccountName.Content = account.Site;
-                UserName.Content = account.Username;
-                Email.Content = account.Email;
-                Password.Content = account.Password;
+            string SearchedAccountNameText = ((TextBox)e.OriginalSource).Text;
 
-                if (account.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
+            if (SearchedAccountNameText.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0);
 
-                else CopyBtn.Visibility = Visibility.Visible;
+            Account account = manager.searchMultipleAccounts(SearchedAccountNameText);
 
-                if (account.Other.Length > 0)
-                {
-                    otherLbl.Visibility = Visibility.Visible;
-                    Other.Visibility = Visibility.Visible;
-
-                    Other.Content = account.Other;
-                }
-                else
-                {
-                    otherLbl.Visibility = Visibility.Hidden;
-                    Other.Visibility = Visibility.Hidden;
-                }
-            }
+            PopulateLabels(account);
         }
+
 
         public void load(String searchTerm)
         {
@@ -75,17 +60,45 @@ namespace PasswordManager
 
         private void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (UserName.Content.ToString().Length == 0)
+            LOG.Info("Copying credentials");
+            Utils utils = new Utils();
+            utils.CopyOnClick(UserName.Text, Email.Text, Password.Text);
+
+            CopyBtn.Background = (Brush)Application.Current.Resources["PositiveButtonBrush"];
+        }
+
+        private void PopulateLabels(Account foundAccount)
+        {
+            AccountName.Text = foundAccount.Site;
+            UserName.Text = foundAccount.Username;
+            Email.Text = foundAccount.Email;
+            Password.Text = foundAccount.Password;
+
+            if (foundAccount.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
+
+            else CopyBtn.Visibility = Visibility.Visible;
+
+
+            if (foundAccount.Other.Length > 0)
             {
-                Clipboard.SetText(Email.Content.ToString());
+                otherLbl.Visibility = Visibility.Visible;
+                Other.Visibility = Visibility.Visible;
+
+                Other.Text = foundAccount.Other;
             }
             else
             {
-                Clipboard.SetText(UserName.Content.ToString());
+                otherLbl.Visibility = Visibility.Hidden;
+                Other.Visibility = Visibility.Hidden;
             }
-            System.Threading.Thread.Sleep(300);
-            Clipboard.SetText(Password.Content.ToString());
-            MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
+        }
+
+        private void AccountOnClick(object sender, RoutedEventArgs e)
+        {
+            Utils utils = new Utils();
+            Account clickedAccount = utils.AccountOnClick(sender, e); 
+            PopulateLabels(clickedAccount);
+            SearchBox.SearchedAccountName.Text = clickedAccount.Site;
         }
     }
 }

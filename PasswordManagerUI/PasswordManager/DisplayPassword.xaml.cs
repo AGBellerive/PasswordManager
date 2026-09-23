@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
 using log4net;
 
 namespace PasswordManager
@@ -24,20 +27,22 @@ namespace PasswordManager
         public DisplayPassword()
         {
             InitializeComponent();
+
             LOG.Info("Display password initilized");
 
             if (manager == null) manager = new FileManager();
             if (nav == null) nav = new Navigation();
 
             //manager.readJson();
-            SearchedAccountName.Focus();
-            AccountListScroller.Visibility = Visibility.Hidden;
             otherLbl.Visibility = Visibility.Hidden;
             Other.Visibility = Visibility.Hidden;
             CopyBtn.Visibility = Visibility.Hidden;
             LastLogin.Content = "Last Log In: " + manager.getLastLogIn();
             manager.updateLastLogin();
+
+            Loaded += (sender, e) => SearchBox.FocusInput(); // This allows the searchbox to pull focus when the page is launched
         }
+
 
         /**
          * Whenever the user types in the testbox field, it is checked if the user
@@ -47,70 +52,28 @@ namespace PasswordManager
          * text that is searched. If it is multiple accounts, that is then deletated to
          * another class
          */
-        private void OnKeyDownHandler(object sender, KeyEventArgs e)
+        private void SearchHandler(object sender, RoutedEventArgs e)
         {
-            if (e.Key == Key.Return)
-            {
-                if (SearchedAccountName.Text.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0); 
-                Account foundAccount = manager.searchAccount(SearchedAccountName.Text);
+            string SearchedAccountNameText = ((TextBox)e.OriginalSource).Text;
+            //Instead of directly refering to the "SearchAccountName" textbox, this casting allows us to refrence that block
 
-                if (foundAccount.Site.Equals("MULTI-FIND"))
+            if (SearchedAccountNameText.Equals("Exit", StringComparison.OrdinalIgnoreCase)) Environment.Exit(0); 
+               
+            Account foundAccount = manager.searchAccount(SearchedAccountNameText);
+
+            if (foundAccount.Site.Equals("MULTI-FIND"))
                 {
-                    MultipleAccountDisplay mad = new MultipleAccountDisplay();
-                    LOG.Info("Changing to Multiple Account Display");
-                    mad.load(SearchedAccountName.Text);
-                    mad.AccountList.Text = "";
-
-                    foreach (Account acc in manager.multiAccountFind)
-                    {
-                        mad.AccountList.Text += acc.Site + "\n";
-                    }
+                MultipleAccountDisplay mad = new MultipleAccountDisplay();
+                LOG.Info("Changing to Multiple Account Display");
+                mad.load(SearchedAccountNameText);
+                    
                     Application.Current.MainWindow.Content = mad;
-                }
-
-                else if (foundAccount != null)
-                {
-                    AccountName.Content = foundAccount.Site;
-                    UserName.Content = foundAccount.Username;
-                    Email.Content = foundAccount.Email;
-                    Password.Content = foundAccount.Password;
-
-                    if (foundAccount.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
-                    
-                    else CopyBtn.Visibility = Visibility.Visible;
-                    
-
-                    if (foundAccount.Other.Length > 0)
-                    {
-                        otherLbl.Visibility = Visibility.Visible;
-                        Other.Visibility = Visibility.Visible;
-
-                        Other.Content = foundAccount.Other;
-                    }
-                    else
-                    {
-                        otherLbl.Visibility = Visibility.Hidden;
-                        Other.Visibility = Visibility.Hidden;
-                    }
-                }
             }
-        }
 
-        private void DisplayAllAccounts(object sender, RoutedEventArgs e)
-        {
-            LOG.Info("All accounts displaying");
-            AccountListScroller.Visibility = Visibility.Visible;
-            AccountList.Visibility = Visibility.Visible;
-            AccountList.Text = "";
-
-            //After initial setup, the application crashes becaseu all accounts is null, this fixes
-            if (FileManager.allAccounts == null) return;
-
-            foreach (Account account in FileManager.allAccounts)
+            else if (foundAccount != null)
             {
-                AccountList.Text += account.Site +"\n";
+                PopulateLabels(foundAccount);
             }
-            dropDown.IsExpanded = false;
         }
 
         private void Add_Account_Click(object sender, RoutedEventArgs e)
@@ -137,25 +100,47 @@ namespace PasswordManager
             nav.GoToDeleteAccount();
         }
 
-        private void CopyBtn_Click(object sender, RoutedEventArgs e)
+        public void CopyBtn_Click(object sender, RoutedEventArgs e)
         {
-            if (UserName.Content.ToString().Length != 0 && Email.Content.ToString().Length != 0)
+            LOG.Info("Copying credentials");
+            Utils utils = new Utils();
+            utils.CopyOnClick(UserName.Text, Email.Text, Password.Text);
+
+            CopyBtn.Background = (Brush)Application.Current.Resources["PositiveButtonBrush"];
+        }
+
+        private void PopulateLabels(Account foundAccount)
+        {
+            AccountName.Text = foundAccount.Site;
+            UserName.Text = foundAccount.Username;
+            Email.Text = foundAccount.Email;
+            Password.Text = foundAccount.Password;
+
+            if (foundAccount.Password.Equals("")) CopyBtn.Visibility = Visibility.Hidden;
+
+            else CopyBtn.Visibility = Visibility.Visible;
+
+
+            if (foundAccount.Other.Length > 0)
             {
-                Clipboard.SetText(UserName.Content.ToString());
-                System.Threading.Thread.Sleep(300);
-                Clipboard.SetText(Email.Content.ToString());
-            }
-            else if(UserName.Content.ToString().Length == 0)
-            {
-                Clipboard.SetText(Email.Content.ToString());
+                otherLbl.Visibility = Visibility.Visible;
+                Other.Visibility = Visibility.Visible;
+
+                Other.Text = foundAccount.Other;
             }
             else
             {
-                Clipboard.SetText(UserName.Content.ToString());
+                otherLbl.Visibility = Visibility.Hidden;
+                Other.Visibility = Visibility.Hidden;
             }
-            System.Threading.Thread.Sleep(300);
-            Clipboard.SetText(Password.Content.ToString());
-            MessageBox.Show("Credentials Copied.\nPress Windows Key + V to view credentials");
+        }
+
+        public void AccountOnClick(object sender, RoutedEventArgs e)
+        {
+            Utils utils = new Utils();
+            Account clickedAccount = utils.AccountOnClick(sender, e);
+            PopulateLabels(clickedAccount);
+            SearchBox.SearchedAccountName.Text = clickedAccount.Site;
         }
     }
 }
