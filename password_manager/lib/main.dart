@@ -6,8 +6,10 @@ import './setup.dart';
 import './constants/app_colors.dart';
 import './vault.dart';
 import 'package:flutter/services.dart';
+import 'utils/authenticator.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -19,12 +21,11 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Password Manager',
-      theme: ThemeData(colorScheme: .fromSeed(seedColor: Colors.green)),
+      theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.green)),
       home: const MyHomePage(title: 'Home Page'),
       debugShowCheckedModeBanner: false,
     );
@@ -34,15 +35,6 @@ class MyApp extends StatelessWidget {
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
   final String title;
 
   @override
@@ -51,63 +43,109 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _passwordController = TextEditingController();
+  bool _isBiometricEnabled = false;
+  bool _isAuthenticating = false;
 
   @override
   void initState() {
     super.initState();
-
-    SharedPreferencesUtil.containsKey('masterPassword').then((value) {
-      if (value) {
-        _passwordController.text = "";
-      } else {
-        PopUpSnackBar.show(
-          context,
-          'No master password set. Redirecting to setup...',
-        );
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => SetupPage()),
-        );
-      }
-    });
-  }
-
-  void _infoPressed() {
-    PopUpSnackBar.show(context, 'Password Hint:\nInfo pressed');
-  }
-
-  void _unlockPressed() {
-    //read shared prefrence for the masterHash
-    //compare the _passwordController.text with the masterHash
-    //if match, navigate to home page
-    //if not match, show error message
-    SharedPreferencesUtil.get('masterPassword').then((masterHash) {
-      if (masterHash.isNotEmpty && _passwordController.text == masterHash) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => Vault()),
-        );
-      } else {
-        PopUpSnackBar.showError(context, 'Incorrect password');
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _initializeAuth();
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+  void dispose() {
+    _passwordController.dispose();
+    super.dispose();
+  }
 
+  Future<void> _initializeAuth() async {
+    final masterPassword = await SharedPreferencesUtil.get('masterPassword');
+    if (!mounted) return;
+
+    if (masterPassword.isEmpty) {
+      PopUpSnackBar.show(
+        context,
+        'No master password set. Redirecting to setup...',
+      );
+      await Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const SetupPage()),
+      );
+      if (!mounted) return;
+      _initializeAuth();
+      return;
+    }
+
+    final biometricLockStr = await SharedPreferencesUtil.get('biometricLock');
+    final biometricLockEnabled = biometricLockStr.toLowerCase() == 'true';
+    final authenticator = Authenticator();
+    final isSupported = await authenticator.biometricSupport();
+
+    if (!mounted) return;
+    setState(() {
+      _isBiometricEnabled = biometricLockEnabled && isSupported;
+    });
+
+    // if (_isBiometricEnabled) {
+    //   _authenticate();
+    // }
+  }
+
+  void _infoPressed() async {
+    final hint = await SharedPreferencesUtil.get('hint');
+    if (!mounted) return;
+    if (hint.isNotEmpty) {
+      PopUpSnackBar.show(context, 'Password Hint: $hint');
+    } else {
+      PopUpSnackBar.show(context, 'No password hint set.');
+    }
+  }
+
+  void _unlockPressed() async {
+    final masterHash = await SharedPreferencesUtil.get('masterPassword');
+    if (!mounted) return;
+
+    if (masterHash.isNotEmpty && _passwordController.text == masterHash) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Vault()),
+      );
+    } else {
+      PopUpSnackBar.showError(context, 'Incorrect password');
+    }
+  }
+
+  void _authenticate() async {
+    if (_isAuthenticating) return;
+    _isAuthenticating = true;
+
+    final authenticator = Authenticator();
+    final authenticated = await authenticator.authenticateBiometric(
+      'Authenticate to Unlock Vault',
+    );
+
+    if (!mounted) return;
+    _isAuthenticating = false;
+
+    if (authenticated) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const Vault()),
+      );
+    } else {
+      PopUpSnackBar.showError(context, 'Authentication failed');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
       body: Center(
         child: Column(
-          // Invoke "debug painting" -> press "p" in the console to see the  wireframe for each widget.
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Vault Locked',
@@ -117,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
               'Enter your master password to unlock',
               style: AppColors.textTheme.copyWith(fontSize: 24),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SizedBox(
               width: 300,
               child: UserInputBox(
@@ -129,12 +167,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 onClick: _unlockPressed,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SizedBox(
               width: 300,
-              child: ElevatedButton(
-                onPressed: _unlockPressed,
-                child: Text('Unlock'),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: _unlockPressed,
+                      child: const Text('Unlock'),
+                    ),
+                  ),
+                  if (_isBiometricEnabled) ...[
+                    const SizedBox(width: 12),
+                    IconButton.filled(
+                      onPressed: _authenticate,
+                      icon: const Icon(Icons.fingerprint),
+                      tooltip: 'Biometric Unlock',
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.all(12),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
           ],
@@ -143,8 +200,8 @@ class _MyHomePageState extends State<MyHomePage> {
       floatingActionButton: FloatingActionButton(
         onPressed: _infoPressed,
         tooltip: 'Info',
-        child: const Icon(Icons.info_outline),
         backgroundColor: AppColors.blueAccent,
+        child: const Icon(Icons.info_outline),
       ),
     );
   }

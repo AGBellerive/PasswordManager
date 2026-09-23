@@ -8,6 +8,7 @@ import 'models/account.dart';
 import 'utils/sharedpref.dart';
 import 'widgets/account_card.dart';
 import 'widgets/pop_up_snack_bar.dart';
+import 'setup.dart';
 
 class Vault extends StatefulWidget {
   const Vault({super.key});
@@ -272,6 +273,10 @@ class _VaultState extends State<Vault> with SingleTickerProviderStateMixin {
             titleStyle: TextStyle(fontSize: 16, color: AppColors.cardColor),
             onPress: () {
               _animationController.reverse();
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SetupPage()),
+              );
             },
           ),
         ],

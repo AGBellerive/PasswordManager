@@ -8,6 +8,7 @@ import 'package:file_picker/file_picker.dart';
 import 'dart:io';
 import './main.dart';
 import 'package:dart_ping/dart_ping.dart';
+import 'utils/authenticator.dart';
 
 class SetupPage extends StatefulWidget {
   const SetupPage({super.key});
@@ -27,11 +28,74 @@ class _SetupPageState extends State<SetupPage> {
   bool biometricLock = false;
   bool connectionSuccess = false;
   File passwordFile = File('');
+  bool canBiometricLock = false;
+  bool fromSharedPreferences = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _masterPasswordController.addListener(_onFieldChanged);
+    _urlController.addListener(_onFieldChanged);
+    _checkBiometricSupport();
+    _populateFields();
+  }
+
+  @override
+  void dispose() {
+    _masterPasswordController.removeListener(_onFieldChanged);
+    _urlController.removeListener(_onFieldChanged);
+    _masterPasswordController.dispose();
+    _hintController.dispose();
+    _urlController.dispose();
+    super.dispose();
+  }
+
+  void _onFieldChanged() {
+    setState(() {});
+  }
+
+  void _populateFields() async {
+    String masterPasswordFromShared = await SharedPreferencesUtil.get(
+      'masterPassword',
+    );
+    String hintFromShared = await SharedPreferencesUtil.get('hint');
+    String biometricLockFromShared = await SharedPreferencesUtil.get(
+      'biometricLock',
+    );
+    String passwordFilePathFromShared = await SharedPreferencesUtil.get(
+      'passwordFile',
+    );
+    String remoteUrlFromShared = await SharedPreferencesUtil.get('remoteUrl');
+
+    if (!mounted) return;
+
+    setState(() {
+      fromSharedPreferences = masterPasswordFromShared.isNotEmpty;
+      _masterPasswordController.text = masterPasswordFromShared;
+      _hintController.text = hintFromShared;
+      biometricLock = biometricLockFromShared.toLowerCase() == 'true';
+      if (passwordFilePathFromShared.isNotEmpty) {
+        passwordFile = File(passwordFilePathFromShared);
+      }
+      _urlController.text = remoteUrlFromShared;
+      if (remoteUrlFromShared.isNotEmpty) {
+        _storageOption = 2;
+        localSelected = false;
+      } else if (passwordFilePathFromShared.isNotEmpty) {
+        _storageOption = 1;
+        localSelected = true;
+      }
+    });
+  }
 
   bool _enableSetUpButton() {
-    return _masterPasswordController.text.isNotEmpty &&
-        _storageOption != null &&
-        passwordFile.path.isNotEmpty;
+    final hasPassword = _masterPasswordController.text.isNotEmpty;
+    if (!hasPassword || _storageOption == null) return false;
+    if (_storageOption == 1) {
+      return passwordFile.path.isNotEmpty;
+    } else {
+      return _urlController.text.isNotEmpty;
+    }
   }
 
   void _setupPressed() {
@@ -47,7 +111,17 @@ class _SetupPageState extends State<SetupPage> {
     } else {
       SharedPreferencesUtil.save('remoteUrl', _urlController.text);
     }
-    Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context, true);
+    } else {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const MyHomePage(title: 'Home Page'),
+        ),
+      );
+    }
   }
 
   void _storageOptionPressed(int? value) {
@@ -56,7 +130,7 @@ class _SetupPageState extends State<SetupPage> {
   }
 
   Widget _localStorageOptions() {
-    return (Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         ElevatedButton(
@@ -70,6 +144,7 @@ class _SetupPageState extends State<SetupPage> {
               final file = File(pickedFile.path!);
 
               await FileOperations.readAccountFile(file.path);
+              if (!mounted) return;
               setState(() {
                 passwordFile = file;
               });
@@ -78,20 +153,20 @@ class _SetupPageState extends State<SetupPage> {
           },
           child: const Text("Browse File System"),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 8),
         Text(
           passwordFile.path.contains('\\')
               ? passwordFile.path.split('\\').last
               : passwordFile.path.split('/').last,
           style: AppColors.textTheme,
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
       ],
-    ));
+    );
   }
 
   Widget _remoteStorageOptions() {
-    return (Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
@@ -104,7 +179,7 @@ class _SetupPageState extends State<SetupPage> {
             keyboardType: TextInputType.url,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         FilledButton(
           onPressed: () async {
             if (_urlController.text.isEmpty) {
@@ -116,27 +191,62 @@ class _SetupPageState extends State<SetupPage> {
               _urlController.text,
               count: 1,
             ).stream.first;
+            if (!mounted) return;
             setState(() {
               if (event is PingResponse) {
                 PopUpSnackBar.show(context, 'Success');
                 connectionSuccess = true;
               } else {
-                PopUpSnackBar.show(context, 'Failed');
+                PopUpSnackBar.showError(context, 'Failed to reach remote URL');
                 connectionSuccess = false;
               }
             });
           },
-          child: Text("Test Remote"),
           style: ButtonStyle(
             backgroundColor: WidgetStatePropertyAll(
               connectionSuccess ? Colors.green : AppColors.blueAccent,
             ),
           ),
+          child: const Text("Test Remote"),
         ),
-        SizedBox(height: 16),
-        Text('Remote URL'),
+        const SizedBox(height: 16),
+        const Text('Remote URL'),
       ],
-    ));
+    );
+  }
+
+  void _checkBiometricSupport() async {
+    final authenticator = Authenticator();
+    final isSupported = await authenticator.biometricSupport();
+    if (!mounted) return;
+    setState(() {
+      canBiometricLock = isSupported;
+    });
+  }
+
+  void _onBiometricToggle(bool value) async {
+    if (!value) {
+      setState(() {
+        biometricLock = false;
+      });
+      return;
+    }
+
+    final authenticator = Authenticator();
+    final authenticated = await authenticator.authenticateBiometric(
+      'Authenticate to enable biometric unlock',
+    );
+    if (!mounted) return;
+
+    setState(() {
+      biometricLock = authenticated;
+    });
+
+    if (authenticated) {
+      PopUpSnackBar.show(context, 'Biometric unlock enabled');
+    } else {
+      PopUpSnackBar.showError(context, 'Authentication failed');
+    }
   }
 
   @override
@@ -145,13 +255,13 @@ class _SetupPageState extends State<SetupPage> {
       backgroundColor: AppColors.backgroundColor,
       body: Center(
         child: Column(
-          mainAxisAlignment: .center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'Set Up Your Vault',
               style: AppColors.textTheme.copyWith(fontSize: 24),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SizedBox(
               width: 300,
               child: UserInputBox(
@@ -162,7 +272,7 @@ class _SetupPageState extends State<SetupPage> {
                 keyboardType: TextInputType.text,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SizedBox(
               width: 300,
               child: UserInputBox(
@@ -174,63 +284,61 @@ class _SetupPageState extends State<SetupPage> {
               ),
             ),
 
-            Row(
-              mainAxisAlignment: .center,
-              children: [
-                Text("Biometric Unlock", style: AppColors.textTheme),
-                SizedBox(width: 16),
-                Switch(
-                  value: biometricLock,
-                  activeThumbColor: Colors.green,
-                  activeTrackColor: Colors.white,
-                  inactiveThumbColor: Colors.white,
-                  inactiveTrackColor: Colors.grey,
-                  onChanged: (bool value) {
-                    // This is called when the user toggles the switch.
-                    setState(() {
-                      biometricLock = value;
-                    });
-                  },
-                ),
-              ],
-            ),
+            if (canBiometricLock)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Biometric Unlock", style: AppColors.textTheme),
+                  const SizedBox(width: 16),
+                  Switch(
+                    value: biometricLock,
+                    activeThumbColor: Colors.green,
+                    activeTrackColor: Colors.white,
+                    inactiveThumbColor: Colors.white,
+                    inactiveTrackColor: Colors.grey,
+                    onChanged: _onBiometricToggle,
+                  ),
+                ],
+              )
+            else
+              const SizedBox(height: 16),
 
             Text(
               "Choose your password storage option",
               style: AppColors.textTheme,
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             SizedBox(
-              width: 300,
-              child: Row(
-                mainAxisAlignment: .center,
-                children: [
-                  Radio(
-                    value: 1,
-                    groupValue: _storageOption,
-                    fillColor: const WidgetStatePropertyAll(AppColors.blueAccent),
-                    onChanged: (value) {
-                      setState(() {
-                        _storageOptionPressed(value);
-                      });
-                    },
-                  ),
-                  Text('Local Storage', style: AppColors.textTheme),
-                  Radio(
-                    value: 2,
-                    groupValue: _storageOption,
-                    fillColor: const WidgetStatePropertyAll(AppColors.blueAccent),
-                    onChanged: (value) {
-                      setState(() {
-                        _storageOptionPressed(value);
-                      });
-                    },
-                  ),
-                  Text('Remote Storage', style: AppColors.textTheme),
-                ],
+              width: 350,
+              child: RadioGroup<int>(
+                groupValue: _storageOption,
+                onChanged: (value) {
+                  setState(() {
+                    _storageOptionPressed(value);
+                  });
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Radio<int>(
+                      value: 1,
+                      fillColor: WidgetStatePropertyAll(
+                        AppColors.blueAccent,
+                      ),
+                    ),
+                    Text('Local Storage', style: AppColors.textTheme),
+                    const Radio<int>(
+                      value: 2,
+                      fillColor: WidgetStatePropertyAll(
+                        AppColors.blueAccent,
+                      ),
+                    ),
+                    Text('Remote Storage', style: AppColors.textTheme),
+                  ],
+                ),
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             _storageOption == 1
                 ? _localStorageOptions()
                 : _remoteStorageOptions(),
@@ -240,13 +348,13 @@ class _SetupPageState extends State<SetupPage> {
               child: ElevatedButton(
                 onPressed: _enableSetUpButton()
                     ? _setupPressed
-                    : () => {
+                    : () {
                         PopUpSnackBar.show(
                           context,
                           "All Fields Must be entered",
-                        ),
+                        );
                       },
-                child: Text('Setup'),
+                child: fromSharedPreferences ? const Text('Save') : const Text('Setup'),
               ),
             ),
           ],

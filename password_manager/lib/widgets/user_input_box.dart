@@ -10,6 +10,7 @@ class UserInputBox extends StatefulWidget {
     this.icon,
     this.keyboardType,
     this.onClick,
+    this.onTap,
   });
 
   final String hintText;
@@ -18,6 +19,7 @@ class UserInputBox extends StatefulWidget {
   final IconData? icon;
   final TextInputType? keyboardType;
   final VoidCallback? onClick;
+  final VoidCallback? onTap;
 
   @override
   State<UserInputBox> createState() => _UserInputBoxState();
@@ -69,7 +71,7 @@ class _UserInputBoxState extends State<UserInputBox> {
               )
             : null,
       ),
-      //onTap: widget.onClick,
+      onTap: widget.onTap,
       onFieldSubmitted: (value) {
         // Handle the submission of the input value here
         widget.onClick?.call();
